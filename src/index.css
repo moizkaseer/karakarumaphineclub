@@ -1,0 +1,237 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 30% 6%;
+    --foreground: 220 20% 96%;
+    --card: 220 25% 10%;
+    --card-foreground: 220 20% 96%;
+    --popover: 220 25% 10%;
+    --popover-foreground: 220 20% 96%;
+    --primary: 43 65% 53%;
+    --primary-foreground: 220 30% 6%;
+    --secondary: 220 20% 14%;
+    --secondary-foreground: 220 20% 96%;
+    --muted: 220 20% 14%;
+    --muted-foreground: 220 15% 68%;
+    --accent: 43 65% 53%;
+    --accent-foreground: 220 30% 6%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 15% 20%;
+    --input: 220 15% 20%;
+    --ring: 43 65% 53%;
+    --radius: 0px;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
+  
+  body {
+    @apply bg-[#0B0F17] text-[#F2F5FA] antialiased;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+}
+
+/* Typography */
+.font-display {
+  font-family: 'Sora', sans-serif;
+}
+
+.font-mono {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* Noise overlay */
+.noise-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* Hairline rule */
+.hairline {
+  height: 1px;
+  background: rgba(242, 245, 250, 0.15);
+}
+
+/* CTA underline animation */
+.cta-underline {
+  position: relative;
+}
+
+.cta-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: #D4A23A;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.cta-underline:hover::after {
+  transform: scaleX(1);
+}
+
+/* Button styles */
+.btn-primary {
+  @apply px-6 py-3 bg-[#D4A23A] text-[#0B0F17] font-semibold text-sm tracking-wide transition-all duration-300;
+}
+
+.btn-primary:hover {
+  @apply transform -translate-y-0.5;
+  box-shadow: 0 4px 20px rgba(212, 162, 58, 0.3);
+}
+
+.btn-secondary {
+  @apply px-6 py-3 border border-[#F2F5FA]/30 text-[#F2F5FA] font-medium text-sm tracking-wide transition-all duration-300;
+}
+
+.btn-secondary:hover {
+  @apply border-[#D4A23A] text-[#D4A23A];
+}
+
+/* Section pinned */
+.section-pinned {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Label mono style */
+.label-mono {
+  @apply font-mono text-xs tracking-[0.12em] uppercase text-[#A7B1C4];
+}
+
+/* Caption mono style */
+.caption-mono {
+  @apply font-mono text-xs tracking-[0.08em] text-[#A7B1C4];
+}
+
+/* Headline style */
+.headline-display {
+  @apply font-display font-black uppercase tracking-tight text-[#F2F5FA];
+  line-height: 0.95;
+}
+
+/* Body text */
+.body-text {
+  @apply text-[#A7B1C4] leading-relaxed;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B0F17;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1a2332;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #D4A23A;
+}
+
+/* Selection */
+::selection {
+  background: rgba(212, 162, 58, 0.3);
+  color: #F2F5FA;
+}
+
+/* Admin panel styles */
+.admin-panel {
+  @apply min-h-screen bg-[#0B0F17];
+}
+
+.admin-card {
+  @apply bg-[#141B26] border border-[#1E293B] p-6;
+}
+
+/* Form inputs */
+input, textarea {
+  @apply bg-[#141B26] border border-[#1E293B] text-[#F2F5FA] px-4 py-3 outline-none transition-all duration-300;
+}
+
+input:focus, textarea:focus {
+  @apply border-[#D4A23A];
+}
+
+input::placeholder, textarea::placeholder {
+  @apply text-[#A7B1C4]/50;
+}
+
+/* Image treatment */
+.alpine-image {
+  filter: saturate(0.7) contrast(1.05);
+}
+
+/* Z-index layers for sections */
+.z-section-1 { z-index: 10; }
+.z-section-2 { z-index: 20; }
+.z-section-3 { z-index: 30; }
+.z-section-4 { z-index: 40; }
+.z-section-5 { z-index: 50; }
+.z-section-6 { z-index: 60; }
+.z-section-7 { z-index: 70; }
+.z-section-8 { z-index: 80; }
+.z-section-9 { z-index: 90; }
+.z-section-10 { z-index: 100; }
+.z-section-11 { z-index: 110; }
+.z-section-12 { z-index: 120; }
+.z-section-13 { z-index: 130; }
+
+/* GSAP Animation Styles - Performance Optimized */
+.section-pinned {
+  /* will-change is set dynamically by GSAP, don't set it here */
+}
+
+/* Character animation */
+.char {
+  display: inline-block;
+}
+
+/* Performance optimizations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Smooth image rendering */
+img {
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
