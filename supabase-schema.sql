@@ -94,7 +94,47 @@ create policy "Authenticated users can update subscribers"
   using (true)
   with check (true);
 
--- 4. STORIES TABLE
+-- 4. MEMBERSHIP APPLICATIONS TABLE
+create table public.membership_applications (
+  id uuid default gen_random_uuid() primary key,
+  full_name text not null,
+  email text not null,
+  phone text,
+  location text not null,
+  experience_level text not null
+    check (experience_level in ('beginner', 'intermediate', 'advanced', 'expert')),
+  climbing_history text,
+  motivation text not null,
+  status text not null default 'pending'
+    check (status in ('pending', 'reviewing', 'approved', 'rejected')),
+  notes text,
+  created_at timestamptz default now()
+);
+
+alter table public.membership_applications enable row level security;
+
+create policy "Anyone can submit membership application"
+  on public.membership_applications for insert
+  to anon, authenticated
+  with check (true);
+
+create policy "Authenticated users can read applications"
+  on public.membership_applications for select
+  to authenticated
+  using (true);
+
+create policy "Authenticated users can update applications"
+  on public.membership_applications for update
+  to authenticated
+  using (true)
+  with check (true);
+
+create policy "Authenticated users can delete applications"
+  on public.membership_applications for delete
+  to authenticated
+  using (true);
+
+-- 5. STORIES TABLE
 create table public.stories (
   id uuid default gen_random_uuid() primary key,
   title text not null,
@@ -134,7 +174,7 @@ create policy "Authenticated users can delete stories"
   to authenticated
   using (true);
 
--- 5. STORAGE BUCKET for event images
+-- 6. STORAGE BUCKET for event images
 insert into storage.buckets (id, name, public)
 values ('event-images', 'event-images', true);
 

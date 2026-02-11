@@ -5,9 +5,10 @@ import type { EventRow } from '@/lib/database'
 
 interface EventsSectionProps {
   className?: string
+  id?: string
 }
 
-export default function EventsSection({ className = '' }: EventsSectionProps) {
+export default function EventsSection({ className = '', id }: EventsSectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const cardsRef = useRef<(HTMLElement | null)[]>([])
@@ -91,7 +92,7 @@ export default function EventsSection({ className = '' }: EventsSectionProps) {
   return (
     <section
       ref={sectionRef}
-      id="events"
+      id={id}
       className={`relative bg-[#0B0F17] py-[10vh] ${className}`}
     >
       <div className="mx-[4vw] hairline" />

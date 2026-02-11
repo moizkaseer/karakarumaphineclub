@@ -5,9 +5,10 @@ import { submitContactForm, subscribeNewsletter } from '@/lib/database'
 
 interface ContactSectionProps {
   className?: string
+  id?: string
 }
 
-export default function ContactSection({ className = '' }: ContactSectionProps) {
+export default function ContactSection({ className = '', id }: ContactSectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null)
   const leftColRef = useRef<HTMLDivElement>(null)
   const rightColRef = useRef<HTMLDivElement>(null)
@@ -121,7 +122,7 @@ export default function ContactSection({ className = '' }: ContactSectionProps) 
   return (
     <section
       ref={sectionRef}
-      id="contact"
+      id={id}
       className={`relative bg-[#0B0F17] py-[10vh] ${className}`}
     >
       <div className="mx-[4vw] hairline mb-[6vh]" />

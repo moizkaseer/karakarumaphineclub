@@ -5,9 +5,10 @@ import type { StoryRow } from '@/lib/database'
 
 interface StoriesSectionProps {
   className?: string
+  id?: string
 }
 
-export default function StoriesSection({ className = '' }: StoriesSectionProps) {
+export default function StoriesSection({ className = '', id }: StoriesSectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const cardsRef = useRef<(HTMLElement | null)[]>([])
@@ -84,7 +85,7 @@ export default function StoriesSection({ className = '' }: StoriesSectionProps) 
   return (
     <section
       ref={sectionRef}
-      id="stories"
+      id={id}
       className={`relative bg-[#141B26] py-[10vh] ${className}`}
     >
       <div className="mx-[4vw] hairline" />

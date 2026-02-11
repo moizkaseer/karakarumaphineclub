@@ -88,6 +88,48 @@ export interface Database {
         }
         Relationships: []
       }
+      membership_applications: {
+        Row: {
+          id: string
+          full_name: string
+          email: string
+          phone: string | null
+          location: string
+          experience_level: 'beginner' | 'intermediate' | 'advanced' | 'expert'
+          climbing_history: string | null
+          motivation: string
+          status: 'pending' | 'reviewing' | 'approved' | 'rejected'
+          notes: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          full_name: string
+          email: string
+          phone?: string | null
+          location: string
+          experience_level: 'beginner' | 'intermediate' | 'advanced' | 'expert'
+          climbing_history?: string | null
+          motivation: string
+          status?: 'pending' | 'reviewing' | 'approved' | 'rejected'
+          notes?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          full_name?: string
+          email?: string
+          phone?: string | null
+          location?: string
+          experience_level?: 'beginner' | 'intermediate' | 'advanced' | 'expert'
+          climbing_history?: string | null
+          motivation?: string
+          status?: 'pending' | 'reviewing' | 'approved' | 'rejected'
+          notes?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
       stories: {
         Row: {
           id: string

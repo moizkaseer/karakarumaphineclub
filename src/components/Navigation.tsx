@@ -18,17 +18,19 @@ export default function Navigation({ onAdminClick }: NavigationProps) {
   }, [])
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
+    if (sectionId === 'home') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else {
+      const element = document.getElementById(sectionId)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
     }
     setIsMobileMenuOpen(false)
   }
 
   const navItems = [
-    { label: 'Expeditions', id: 'expeditions' },
-    { label: 'Conservation', id: 'conservation' },
-    { label: 'Training', id: 'training' },
+    { label: 'Home', id: 'home' },
     { label: 'Stories', id: 'stories' },
     { label: 'Contact', id: 'contact' },
   ]

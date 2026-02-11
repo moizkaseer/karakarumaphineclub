@@ -11,6 +11,9 @@ export type StoryRow = Database['public']['Tables']['stories']['Row']
 export type StoryInsert = Database['public']['Tables']['stories']['Insert']
 export type StoryUpdate = Database['public']['Tables']['stories']['Update']
 export type SubscriberRow = Database['public']['Tables']['newsletter_subscribers']['Row']
+export type MembershipRow = Database['public']['Tables']['membership_applications']['Row']
+export type MembershipInsert = Database['public']['Tables']['membership_applications']['Insert']
+export type MembershipUpdate = Database['public']['Tables']['membership_applications']['Update']
 
 // ==================== AUTH ====================
 
@@ -122,6 +125,32 @@ export async function updateStory(id: string, updates: StoryUpdate) {
 
 export async function deleteStory(id: string) {
   return supabase.from('stories').delete().eq('id', id)
+}
+
+// ==================== MEMBERSHIP APPLICATIONS ====================
+
+export async function submitMembershipApplication(application: MembershipInsert) {
+  return supabase.from('membership_applications').insert(application)
+}
+
+export async function getMembershipApplications() {
+  return supabase
+    .from('membership_applications')
+    .select('*')
+    .order('created_at', { ascending: false })
+}
+
+export async function updateMembershipApplication(id: string, updates: MembershipUpdate) {
+  return supabase
+    .from('membership_applications')
+    .update(updates)
+    .eq('id', id)
+    .select()
+    .single()
+}
+
+export async function deleteMembershipApplication(id: string) {
+  return supabase.from('membership_applications').delete().eq('id', id)
 }
 
 // ==================== STORAGE (Event Images) ====================

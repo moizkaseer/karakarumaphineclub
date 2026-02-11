@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { Lock, Unlock, ArrowLeft, LogOut, Calendar, Mail, Users, BookOpen } from 'lucide-react'
+import { Lock, Unlock, ArrowLeft, LogOut, Calendar, Mail, Users, BookOpen, UserCheck } from 'lucide-react'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { signInWithEmail } from '@/lib/database'
 import EventsTab from './admin/EventsTab'
 import MessagesTab from './admin/MessagesTab'
 import SubscribersTab from './admin/SubscribersTab'
 import StoriesTab from './admin/StoriesTab'
+import MembershipsTab from './admin/MembershipsTab'
 
 interface AdminPanelProps {
   isAdmin: boolean
@@ -158,12 +159,20 @@ export default function AdminPanel({ isAdmin, onLogin, onLogout, onClose }: Admi
               <BookOpen className="w-4 h-4 mr-2" />
               Stories
             </TabsTrigger>
+            <TabsTrigger
+              value="memberships"
+              className="data-[state=active]:bg-[#D4A23A] data-[state=active]:text-[#0B0F17] text-[#A7B1C4] px-4 py-2"
+            >
+              <UserCheck className="w-4 h-4 mr-2" />
+              Memberships
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="events"><EventsTab /></TabsContent>
           <TabsContent value="messages"><MessagesTab /></TabsContent>
           <TabsContent value="subscribers"><SubscribersTab /></TabsContent>
           <TabsContent value="stories"><StoriesTab /></TabsContent>
+          <TabsContent value="memberships"><MembershipsTab /></TabsContent>
         </Tabs>
       </main>
     </div>
