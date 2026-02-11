@@ -4,6 +4,7 @@ import Navigation from './components/Navigation'
 import HeroSection from './sections/HeroSection'
 import SummitMissionSection from './sections/SummitMissionSection'
 import SplitSection from './sections/SplitSection'
+import EventsSection from './sections/EventsSection'
 import StoriesSection from './sections/StoriesSection'
 import ContactSection from './sections/ContactSection'
 import AdminPanel from './sections/AdminPanel'
@@ -234,11 +235,14 @@ function App() {
           layout="text-left"
         />
         
-        {/* Section 12: Stories */}
-        <StoriesSection className="z-section-12" />
-        
-        {/* Section 13: Contact */}
-        <ContactSection className="z-section-13" />
+        {/* Section 12: Events */}
+        <EventsSection className="z-section-12" />
+
+        {/* Section 13: Stories */}
+        <StoriesSection className="z-section-13" />
+
+        {/* Section 14: Contact */}
+        <ContactSection className="z-section-14" />
       </main>
     </div>
   )

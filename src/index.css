@@ -205,6 +205,12 @@ input::placeholder, textarea::placeholder {
 .z-section-11 { z-index: 110; }
 .z-section-12 { z-index: 120; }
 .z-section-13 { z-index: 130; }
+.z-section-14 { z-index: 140; }
+
+/* GSAP pin-spacer z-index inheritance */
+.pin-spacer {
+  z-index: inherit !important;
+}
 
 /* GSAP Animation Styles - Performance Optimized */
 .section-pinned {
