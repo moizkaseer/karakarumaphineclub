@@ -12,10 +12,6 @@ export default function MembershipsTab() {
   const [loading, setLoading] = useState(true)
   const [selectedApplication, setSelectedApplication] = useState<MembershipRow | null>(null)
 
-  useEffect(() => {
-    loadApplications()
-  }, [])
-
   const loadApplications = async () => {
     setLoading(true)
     const { data, error } = await getMembershipApplications()
@@ -24,6 +20,10 @@ export default function MembershipsTab() {
     }
     setLoading(false)
   }
+
+  useEffect(() => {
+    loadApplications()
+  }, [])
 
   const handleStatusChange = async (id: string, status: MembershipRow['status']) => {
     await updateMembershipApplication(id, { status })
@@ -253,7 +253,12 @@ export default function MembershipsTab() {
                   </label>
                   <textarea
                     value={selectedApplication.notes || ''}
-                    onChange={(e) => handleUpdateNotes(selectedApplication.id, e.target.value)}
+                    onChange={(e) =>
+                      setSelectedApplication((previous) =>
+                        previous ? { ...previous, notes: e.target.value } : previous
+                      )
+                    }
+                    onBlur={(e) => handleUpdateNotes(selectedApplication.id, e.target.value)}
                     placeholder="Add internal notes about this application..."
                     rows={4}
                     className="w-full px-3 py-2 bg-[#151C2A] border border-[#1E293B] rounded-lg text-[#F2F5FA] text-sm resize-none focus:outline-none focus:border-[#D4A23A]"

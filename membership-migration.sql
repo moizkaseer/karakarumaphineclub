@@ -3,6 +3,30 @@
 -- Run this in Supabase SQL Editor to add membership functionality
 -- ============================================================
 
+-- Admin helpers (safe to re-run)
+CREATE TABLE IF NOT EXISTS public.admin_users (
+  email text PRIMARY KEY,
+  created_at timestamptz DEFAULT now()
+);
+
+ALTER TABLE public.admin_users ENABLE ROW LEVEL SECURITY;
+
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS boolean
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT
+    coalesce((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin', false)
+    OR EXISTS (
+      SELECT 1
+      FROM public.admin_users AS admins
+      WHERE lower(admins.email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+    );
+$$;
+
 -- Create membership applications table
 CREATE TABLE IF NOT EXISTS public.membership_applications (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -29,18 +53,18 @@ CREATE POLICY "Anyone can submit membership application"
   TO anon, authenticated
   WITH CHECK (true);
 
-CREATE POLICY "Authenticated users can read applications"
+CREATE POLICY "Admins can read applications"
   ON public.membership_applications FOR SELECT
   TO authenticated
-  USING (true);
+  USING (public.is_admin());
 
-CREATE POLICY "Authenticated users can update applications"
+CREATE POLICY "Admins can update applications"
   ON public.membership_applications FOR UPDATE
   TO authenticated
-  USING (true)
-  WITH CHECK (true);
+  USING (public.is_admin())
+  WITH CHECK (public.is_admin());
 
-CREATE POLICY "Authenticated users can delete applications"
+CREATE POLICY "Admins can delete applications"
   ON public.membership_applications FOR DELETE
   TO authenticated
-  USING (true);
+  USING (public.is_admin());

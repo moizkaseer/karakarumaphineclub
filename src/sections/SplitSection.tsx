@@ -10,6 +10,7 @@ interface SplitSectionProps {
   caption: string
   image: string
   layout: 'text-left' | 'image-left'
+  onCtaClick?: () => void
 }
 
 export default function SplitSection({
@@ -20,7 +21,8 @@ export default function SplitSection({
   cta,
   caption,
   image,
-  layout
+  layout,
+  onCtaClick
 }: SplitSectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
@@ -148,7 +150,6 @@ export default function SplitSection({
       )
 
       return () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ScrollTrigger.getAll().forEach((st: { kill: () => void }) => st.kill())
       }
     }
@@ -225,6 +226,7 @@ export default function SplitSection({
 
         <button
           ref={ctaRef}
+          onClick={onCtaClick ?? (() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }))}
           className="cta-underline flex items-center gap-2 mt-8 text-[#F2F5FA] font-medium group"
         >
           <span>{cta}</span>

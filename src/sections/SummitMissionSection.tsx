@@ -115,7 +115,6 @@ export default function SummitMissionSection({ className = '' }: SummitMissionSe
       )
 
       return () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ScrollTrigger.getAll().forEach((st: { kill: () => void }) => st.kill())
       }
     }
@@ -137,7 +136,7 @@ export default function SummitMissionSection({ className = '' }: SummitMissionSe
         className="absolute inset-0"
       >
         <img
-          src="/summit_climber.jpg"
+          src="/passu_cones.jpg"
           alt="Climber on summit"
           className="w-full h-full object-cover"
           style={{ filter: 'saturate(0.75) contrast(1.05)' }}
@@ -184,6 +183,7 @@ export default function SummitMissionSection({ className = '' }: SummitMissionSe
         {/* CTA */}
         <button
           ref={ctaRef}
+          onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
           className="cta-underline flex items-center gap-2 mt-8 text-[#F2F5FA] font-medium"
         >
           <span>Read our charter</span>

@@ -7,16 +7,16 @@ export default function SubscribersTab() {
   const [subscribers, setSubscribers] = useState<SubscriberRow[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    loadSubscribers()
-  }, [])
-
   async function loadSubscribers() {
     setLoading(true)
     const { data, error } = await getNewsletterSubscribers()
     if (!error && data) setSubscribers(data)
     setLoading(false)
   }
+
+  useEffect(() => {
+    loadSubscribers()
+  }, [])
 
   async function handleToggleActive(id: string, currentActive: boolean) {
     await updateSubscriberStatus(id, !currentActive)

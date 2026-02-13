@@ -127,7 +127,6 @@ export default function HeroSection({ className = '', onJoinClick }: HeroSection
       )
 
       return () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         ScrollTrigger.getAll().forEach((st: { kill: () => void }) => st.kill())
       }
     }
@@ -196,7 +195,7 @@ export default function HeroSection({ className = '', onJoinClick }: HeroSection
         className="absolute left-[4vw] bottom-[4.5vh] z-10 max-w-[34vw]"
       >
         <p className="caption-mono">
-          Membership opens quarterly. Next window: Oct 1–15.
+          Membership opens quarterly — limited spots available.
         </p>
       </div>
 

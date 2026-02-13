@@ -32,16 +32,16 @@ export default function EventsTab() {
     status: 'upcoming'
   })
 
-  useEffect(() => {
-    loadEvents()
-  }, [])
-
   async function loadEvents() {
     setLoading(true)
     const { data, error } = await getEvents()
     if (!error && data) setEvents(data)
     setLoading(false)
   }
+
+  useEffect(() => {
+    loadEvents()
+  }, [])
 
   const handleSaveEvent = async (e: React.FormEvent) => {
     e.preventDefault()

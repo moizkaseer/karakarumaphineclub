@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import './App.css'
 import Navigation from './components/Navigation'
 import HeroSection from './sections/HeroSection'
@@ -11,6 +11,7 @@ import AdminPanel from './sections/AdminPanel'
 import MembershipForm from './components/MembershipForm'
 import { supabase } from './lib/supabase'
 import { signOut } from './lib/database'
+import type { Session } from '@supabase/supabase-js'
 
 function App() {
   const [isAdmin, setIsAdmin] = useState(false)
@@ -18,19 +19,41 @@ function App() {
   const [showMembershipForm, setShowMembershipForm] = useState(false)
   const snapInitialized = useRef(false)
 
+  const hasSupabaseAdminAccess = useCallback(async (session: Session | null) => {
+    if (!session) return false
+
+    const { data, error } = await supabase.rpc('is_admin')
+
+    if (error) {
+      console.error('Failed to validate admin access:', error.message)
+      return false
+    }
+
+    return Boolean(data)
+  }, [])
+
   useEffect(() => {
+    const syncAdminState = async (session: Session | null) => {
+      const hasAdminAccess = await hasSupabaseAdminAccess(session)
+      setIsAdmin(hasAdminAccess)
+
+      if (session && !hasAdminAccess) {
+        await signOut()
+      }
+    }
+
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setIsAdmin(!!session)
+      void syncAdminState(session)
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        setIsAdmin(!!session)
+        void syncAdminState(session)
       }
     )
 
     return () => subscription.unsubscribe()
-  }, [])
+  }, [hasSupabaseAdminAccess])
 
   // Global Scroll Snap for pinned sections - optimized
   useEffect(() => {
@@ -41,18 +64,17 @@ function App() {
 
       // Wait for all ScrollTriggers to be created
       setTimeout(() => {
-        const allTriggers = ScrollTrigger.getAll()
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const pinned = allTriggers.filter((st: any) => st.vars.pin)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .sort((a: any, b: any) => a.start - b.start)
+        type PinnedTrigger = { vars?: { pin?: unknown }; start: number; end?: number }
+        const allTriggers = ScrollTrigger.getAll() as PinnedTrigger[]
+        const pinned = allTriggers
+          .filter((st) => Boolean(st.vars?.pin))
+          .sort((a, b) => a.start - b.start)
 
         const maxScroll = ScrollTrigger.maxScroll(window)
 
         if (!maxScroll || pinned.length === 0) return
 
         // Build ranges and snap targets from pinned sections
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const pinnedRanges = pinned.map((st: { start: number; end?: number }) => ({
           start: st.start / maxScroll,
           end: (st.end ?? st.start) / maxScroll,
@@ -105,8 +127,16 @@ function App() {
     setShowAdmin(false)
   }
 
-  const handleAdminLogin = () => {
-    setIsAdmin(true)
+  const handleAdminLogin = async () => {
+    const { data: { session } } = await supabase.auth.getSession()
+    const hasAdminAccess = await hasSupabaseAdminAccess(session)
+
+    if (!hasAdminAccess && session) {
+      await signOut()
+    }
+
+    setIsAdmin(hasAdminAccess)
+    return hasAdminAccess
   }
 
   if (showAdmin) {

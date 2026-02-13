@@ -22,16 +22,16 @@ export default function StoriesTab() {
     published: false
   })
 
-  useEffect(() => {
-    loadStories()
-  }, [])
-
   async function loadStories() {
     setLoading(true)
     const { data, error } = await getAllStories()
     if (!error && data) setStories(data)
     setLoading(false)
   }
+
+  useEffect(() => {
+    loadStories()
+  }, [])
 
   const handleSaveStory = async (e: React.FormEvent) => {
     e.preventDefault()

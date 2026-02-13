@@ -156,10 +156,10 @@ export default function ContactSection({ className = '', id }: ContactSectionPro
             </div>
 
             <div className="mt-10 flex gap-4">
-              <a href="#" className="w-10 h-10 border border-[#1E293B] flex items-center justify-center text-[#A7B1C4] hover:text-[#D4A23A] hover:border-[#D4A23A] transition-all duration-300">
+              <a href="https://instagram.com/karakoramalpine" target="_blank" rel="noopener noreferrer" className="w-10 h-10 border border-[#1E293B] flex items-center justify-center text-[#A7B1C4] hover:text-[#D4A23A] hover:border-[#D4A23A] transition-all duration-300">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="#" className="w-10 h-10 border border-[#1E293B] flex items-center justify-center text-[#A7B1C4] hover:text-[#D4A23A] hover:border-[#D4A23A] transition-all duration-300">
+              <a href="https://twitter.com/karakoramalpine" target="_blank" rel="noopener noreferrer" className="w-10 h-10 border border-[#1E293B] flex items-center justify-center text-[#A7B1C4] hover:text-[#D4A23A] hover:border-[#D4A23A] transition-all duration-300">
                 <Twitter className="w-5 h-5" />
               </a>
             </div>
@@ -234,10 +234,10 @@ export default function ContactSection({ className = '', id }: ContactSectionPro
               © Karakoram Alpine Club. All rights reserved.
             </p>
             <div className="flex gap-6">
-              <a href="#" className="caption-mono hover:text-[#D4A23A] transition-colors">
+              <a href="/privacy.html" className="caption-mono hover:text-[#D4A23A] transition-colors">
                 Privacy Policy
               </a>
-              <a href="#" className="caption-mono hover:text-[#D4A23A] transition-colors">
+              <a href="/terms.html" className="caption-mono hover:text-[#D4A23A] transition-colors">
                 Terms of Service
               </a>
             </div>

@@ -10,7 +10,7 @@ import MembershipsTab from './admin/MembershipsTab'
 
 interface AdminPanelProps {
   isAdmin: boolean
-  onLogin: () => void
+  onLogin: () => Promise<boolean>
   onLogout: () => void
   onClose: () => void
 }
@@ -31,7 +31,10 @@ export default function AdminPanel({ isAdmin, onLogin, onLogout, onClose }: Admi
     if (error) {
       setError(error.message)
     } else {
-      onLogin()
+      const granted = await onLogin()
+      if (!granted) {
+        setError('This account is authenticated but not authorized for admin access.')
+      }
     }
     setLoading(false)
   }

@@ -196,12 +196,13 @@ Will use Vercel's automatic detection or create `vercel.json`:
 - All tables have RLS enabled
 - Public can only read published content (events, stories)
 - Public can insert contact forms and newsletter signups
-- Only authenticated users can perform CRUD operations
+- Admins can perform privileged CRUD operations
 
 **Environment Variables:**
 - `.env` is gitignored (never committed)
 - Only publishable key exposed to frontend
 - Secret key stored in local `.env` (not used in frontend)
+- Admin access is enforced by Supabase authorization using `public.is_admin()` + RLS policies
 
 **API Keys:**
 - Using newer Supabase key format (`sb_publishable_...`)

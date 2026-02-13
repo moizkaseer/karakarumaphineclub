@@ -86,8 +86,8 @@
   - Vercel will auto-detect Vite settings
 
 - [ ] **Configure environment variables**
-  - Add `VITE_SUPABASE_URL` = `https://fologfuvmhahkwvrsofi.supabase.co`
-  - Add `VITE_SUPABASE_ANON_KEY` = `sb_publishable_fjuVFRK7AbHv5rqt5ZOK4Q_i56nrIlq`
+  - Add `VITE_SUPABASE_URL` = `https://your-project-id.supabase.co`
+  - Add `VITE_SUPABASE_ANON_KEY` = `your-anon-key-here`
   - Save settings
 
 - [ ] **Configure build settings** (should auto-detect)
@@ -149,6 +149,7 @@
 - [ ] **Verify RLS policies work**
   - Try accessing admin endpoints without auth (should fail)
   - Verify public can't edit events/stories
+  - Confirm your admin account is in `public.admin_users` (or has `app_metadata.role = 'admin'`)
 
 - [ ] **Check environment variables**
   - Confirm no secrets in Git history

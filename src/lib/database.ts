@@ -81,7 +81,7 @@ export async function markSubmissionRead(id: string, read: boolean) {
 export async function subscribeNewsletter(email: string) {
   return supabase
     .from('newsletter_subscribers')
-    .upsert({ email, active: true }, { onConflict: 'email' })
+    .upsert({ email, active: true }, { onConflict: 'email', ignoreDuplicates: true })
 }
 
 export async function getNewsletterSubscribers() {

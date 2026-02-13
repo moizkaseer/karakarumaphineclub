@@ -31,6 +31,7 @@ export default function Navigation({ onAdminClick }: NavigationProps) {
 
   const navItems = [
     { label: 'Home', id: 'home' },
+    { label: 'Events', id: 'events' },
     { label: 'Stories', id: 'stories' },
     { label: 'Contact', id: 'contact' },
   ]

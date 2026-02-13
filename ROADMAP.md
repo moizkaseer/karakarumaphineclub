@@ -162,15 +162,16 @@ In "Environment Variables" section, add:
 
 **Variable 1:**
 - Key: `VITE_SUPABASE_URL`
-- Value: `https://fologfuvmhahkwvrsofi.supabase.co`
+- Value: `https://your-project-id.supabase.co`
 - Environment: Production, Preview, Development (all checked)
 
 **Variable 2:**
 - Key: `VITE_SUPABASE_ANON_KEY`
-- Value: `sb_publishable_fjuVFRK7AbHv5rqt5ZOK4Q_i56nrIlq`
+- Value: `your-anon-key-here`
 - Environment: Production, Preview, Development (all checked)
 
-⚠️ **Important:** These are your actual Supabase credentials - keep them secure!
+
+⚠️ **Important:** Use your real Supabase project values in production.
 
 ### Step 2.5: Deploy (5-10 minutes)
 
@@ -541,3 +542,4 @@ Your deployment is successful when:
 **Estimated Time to Live Site:** 1-2 hours
 
 **Let's make this happen! 🚀⛰️**
+

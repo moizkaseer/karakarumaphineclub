@@ -183,7 +183,10 @@ export default function EventsSection({ className = '', id }: EventsSectionProps
                 </p>
 
                 {/* CTA */}
-                <button className="cta-underline flex items-center gap-2 mt-5 text-[#F2F5FA] text-sm font-medium">
+                <button
+                  onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                  className="cta-underline flex items-center gap-2 mt-5 text-[#F2F5FA] text-sm font-medium"
+                >
                   <span>Learn more</span>
                   <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </button>

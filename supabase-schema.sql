@@ -3,6 +3,33 @@
 -- Run this entire script in the Supabase SQL Editor
 -- ============================================================
 
+-- 0. ADMIN ACCESS HELPERS
+create table if not exists public.admin_users (
+  email text primary key,
+  created_at timestamptz default now()
+);
+
+alter table public.admin_users enable row level security;
+
+create or replace function public.is_admin()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select
+    coalesce((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin', false)
+    or exists (
+      select 1
+      from public.admin_users as admins
+      where lower(admins.email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+    );
+$$;
+
+-- Add at least one admin before using the dashboard:
+-- insert into public.admin_users(email) values ('admin@example.com');
+
 -- 1. EVENTS TABLE
 create table public.events (
   id uuid default gen_random_uuid() primary key,
@@ -24,21 +51,21 @@ create policy "Events are publicly readable"
   on public.events for select
   using (true);
 
-create policy "Authenticated users can insert events"
+create policy "Admins can insert events"
   on public.events for insert
   to authenticated
-  with check (true);
+  with check (public.is_admin());
 
-create policy "Authenticated users can update events"
+create policy "Admins can update events"
   on public.events for update
   to authenticated
-  using (true)
-  with check (true);
+  using (public.is_admin())
+  with check (public.is_admin());
 
-create policy "Authenticated users can delete events"
+create policy "Admins can delete events"
   on public.events for delete
   to authenticated
-  using (true);
+  using (public.is_admin());
 
 -- 2. CONTACT SUBMISSIONS TABLE
 create table public.contact_submissions (
@@ -57,16 +84,16 @@ create policy "Anyone can submit contact form"
   to anon, authenticated
   with check (true);
 
-create policy "Authenticated users can read submissions"
+create policy "Admins can read submissions"
   on public.contact_submissions for select
   to authenticated
-  using (true);
+  using (public.is_admin());
 
-create policy "Authenticated users can update submissions"
+create policy "Admins can update submissions"
   on public.contact_submissions for update
   to authenticated
-  using (true)
-  with check (true);
+  using (public.is_admin())
+  with check (public.is_admin());
 
 -- 3. NEWSLETTER SUBSCRIBERS TABLE
 create table public.newsletter_subscribers (
@@ -83,16 +110,16 @@ create policy "Anyone can subscribe"
   to anon, authenticated
   with check (true);
 
-create policy "Authenticated users can read subscribers"
+create policy "Admins can read subscribers"
   on public.newsletter_subscribers for select
   to authenticated
-  using (true);
+  using (public.is_admin());
 
-create policy "Authenticated users can update subscribers"
+create policy "Admins can update subscribers"
   on public.newsletter_subscribers for update
   to authenticated
-  using (true)
-  with check (true);
+  using (public.is_admin())
+  with check (public.is_admin());
 
 -- 4. MEMBERSHIP APPLICATIONS TABLE
 create table public.membership_applications (
@@ -118,21 +145,21 @@ create policy "Anyone can submit membership application"
   to anon, authenticated
   with check (true);
 
-create policy "Authenticated users can read applications"
+create policy "Admins can read applications"
   on public.membership_applications for select
   to authenticated
-  using (true);
+  using (public.is_admin());
 
-create policy "Authenticated users can update applications"
+create policy "Admins can update applications"
   on public.membership_applications for update
   to authenticated
-  using (true)
-  with check (true);
+  using (public.is_admin())
+  with check (public.is_admin());
 
-create policy "Authenticated users can delete applications"
+create policy "Admins can delete applications"
   on public.membership_applications for delete
   to authenticated
-  using (true);
+  using (public.is_admin());
 
 -- 5. STORIES TABLE
 create table public.stories (
@@ -153,44 +180,45 @@ create policy "Anyone can read published stories"
   to anon
   using (published = true);
 
-create policy "Authenticated users can read all stories"
+create policy "Admins can read all stories"
   on public.stories for select
   to authenticated
-  using (true);
+  using (public.is_admin());
 
-create policy "Authenticated users can insert stories"
+create policy "Admins can insert stories"
   on public.stories for insert
   to authenticated
-  with check (true);
+  with check (public.is_admin());
 
-create policy "Authenticated users can update stories"
+create policy "Admins can update stories"
   on public.stories for update
   to authenticated
-  using (true)
-  with check (true);
+  using (public.is_admin())
+  with check (public.is_admin());
 
-create policy "Authenticated users can delete stories"
+create policy "Admins can delete stories"
   on public.stories for delete
   to authenticated
-  using (true);
+  using (public.is_admin());
 
 -- 6. STORAGE BUCKET for event images
 insert into storage.buckets (id, name, public)
-values ('event-images', 'event-images', true);
+values ('event-images', 'event-images', true)
+on conflict (id) do nothing;
 
 create policy "Public read access for event images"
   on storage.objects for select
   using (bucket_id = 'event-images');
 
-create policy "Authenticated users can upload event images"
+create policy "Admins can upload event images"
   on storage.objects for insert
   to authenticated
-  with check (bucket_id = 'event-images');
+  with check (bucket_id = 'event-images' and public.is_admin());
 
-create policy "Authenticated users can delete event images"
+create policy "Admins can delete event images"
   on storage.objects for delete
   to authenticated
-  using (bucket_id = 'event-images');
+  using (bucket_id = 'event-images' and public.is_admin());
 
 -- 6. SEED DATA
 insert into public.events (title, date, location, description, max_participants, status)
@@ -206,10 +234,10 @@ insert into public.stories (title, category, excerpt, content, image, published)
 values
   ('The K2 Weather Window', 'Expedition',
    'How we read the jet stream to pick a safer summit day.',
-   'Full article content here...', '/story1.jpg', true),
+   'Full article content here...', '/lady_finger.jpg', true),
   ('Cleaning the Baltoro', 'Conservation',
    'A 14-day waste sweep from Paiju to Concordia.',
-   'Full article content here...', '/story2.jpg', true),
+   'Full article content here...', '/passu_cones.jpg', true),
   ('Ice Rescue Drills', 'Training',
    'What to do when a teammate goes into a crevasse.',
-   'Full article content here...', '/story3.jpg', true);
+   'Full article content here...', '/who_we_are.jpg', true);

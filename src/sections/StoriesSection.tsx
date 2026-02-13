@@ -9,6 +9,7 @@ interface StoriesSectionProps {
 }
 
 export default function StoriesSection({ className = '', id }: StoriesSectionProps) {
+  const fallbackStoryImage = '/lady_finger.jpg'
   const sectionRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const cardsRef = useRef<(HTMLElement | null)[]>([])
@@ -125,14 +126,19 @@ export default function StoriesSection({ className = '', id }: StoriesSectionPro
               <article
                 key={story.id}
                 ref={(el) => { cardsRef.current[index] = el }}
+                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
                 className="group cursor-pointer opacity-0"
               >
                 <div className="relative aspect-[16/10] overflow-hidden">
                   <img
-                    src={story.image}
+                    src={story.image || fallbackStoryImage}
                     alt={story.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     style={{ filter: 'saturate(0.75) contrast(1.05)' }}
+                    onError={(event) => {
+                      if (event.currentTarget.src.endsWith(fallbackStoryImage)) return
+                      event.currentTarget.src = fallbackStoryImage
+                    }}
                   />
                   <div className="absolute inset-0 bg-[#0B0F17]/20 group-hover:bg-transparent transition-colors duration-500" />
                 </div>
@@ -143,7 +149,10 @@ export default function StoriesSection({ className = '', id }: StoriesSectionPro
                     {story.title}
                   </h3>
                   <p className="body-text mt-2 text-sm">{story.excerpt}</p>
-                  <button className="cta-underline flex items-center gap-2 mt-4 text-[#F2F5FA] text-sm font-medium">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }) }}
+                    className="cta-underline flex items-center gap-2 mt-4 text-[#F2F5FA] text-sm font-medium"
+                  >
                     <span>Read more</span>
                     <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                   </button>

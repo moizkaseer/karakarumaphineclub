@@ -1,61 +1,49 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react'
 
-// Custom hook for GSAP animations
+type GSAPInstance = typeof window.gsap
+type ScrollTriggerInstance = typeof window.ScrollTrigger
+
 export const useGSAP = () => {
-  const gsapRef = useRef<typeof window.gsap | null>(null);
-  const scrollTriggerRef = useRef<typeof window.ScrollTrigger | null>(null);
+  const [gsapInstance, setGsapInstance] = useState<GSAPInstance | null>(null)
+  const [scrollTriggerInstance, setScrollTriggerInstance] = useState<ScrollTriggerInstance | null>(null)
 
   useEffect(() => {
-    // Wait for GSAP to load from CDN
-    const checkGSAP = () => {
-      if (window.gsap && window.ScrollTrigger) {
-        gsapRef.current = window.gsap;
-        scrollTriggerRef.current = window.ScrollTrigger;
-        
-        // Register ScrollTrigger plugin
-        window.gsap.registerPlugin(window.ScrollTrigger);
-        
-        // Refresh ScrollTrigger after setup
-        window.ScrollTrigger.refresh();
-      }
-    };
+    const syncGsap = () => {
+      if (!window.gsap || !window.ScrollTrigger) return
 
-    // Check immediately
-    checkGSAP();
+      window.gsap.registerPlugin(window.ScrollTrigger)
+      window.ScrollTrigger.refresh()
+      setGsapInstance(window.gsap)
+      setScrollTriggerInstance(window.ScrollTrigger)
+    }
 
-    // Also check after a short delay to ensure CDN scripts loaded
-    const timer = setTimeout(checkGSAP, 500);
+    syncGsap()
+    const timer = window.setTimeout(syncGsap, 500)
 
     return () => {
-      clearTimeout(timer);
-    };
-  }, []);
+      window.clearTimeout(timer)
+    }
+  }, [])
 
-  return { gsap: gsapRef.current, ScrollTrigger: scrollTriggerRef.current };
-};
+  return { gsap: gsapInstance, ScrollTrigger: scrollTriggerInstance }
+}
 
-// Hook for creating scroll-triggered animations
 export const useScrollAnimation = (
-  animationCallback: (gsap: typeof window.gsap, scrollTrigger: typeof window.ScrollTrigger) => void,
-  deps: React.DependencyList = []
+  animationCallback: (gsap: GSAPInstance, scrollTrigger: ScrollTriggerInstance) => void
 ) => {
   useEffect(() => {
     const initAnimation = () => {
-      if (window.gsap && window.ScrollTrigger) {
-        animationCallback(window.gsap, window.ScrollTrigger);
-      }
-    };
+      if (!window.gsap || !window.ScrollTrigger) return
+      animationCallback(window.gsap, window.ScrollTrigger)
+    }
 
-    // Try immediately
-    initAnimation();
-
-    // Retry after delay
-    const timer = setTimeout(initAnimation, 600);
+    initAnimation()
+    const timer = window.setTimeout(initAnimation, 600)
 
     return () => {
-      clearTimeout(timer);
-    };
-  }, deps);
-};
+      window.clearTimeout(timer)
+    }
+  }, [animationCallback])
+}
 
-export default useGSAP;
+export default useGSAP

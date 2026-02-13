@@ -9,16 +9,16 @@ export default function MessagesTab() {
   const [loading, setLoading] = useState(true)
   const [selectedMessage, setSelectedMessage] = useState<ContactRow | null>(null)
 
-  useEffect(() => {
-    loadSubmissions()
-  }, [])
-
   async function loadSubmissions() {
     setLoading(true)
     const { data, error } = await getContactSubmissions()
     if (!error && data) setSubmissions(data)
     setLoading(false)
   }
+
+  useEffect(() => {
+    loadSubmissions()
+  }, [])
 
   async function handleToggleRead(id: string, currentRead: boolean) {
     await markSubmissionRead(id, !currentRead)
