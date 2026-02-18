@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Send, Mail, MapPin, Phone, Instagram, Twitter, ArrowRight } from 'lucide-react'
+import { Send, Mail, MapPin, Phone, Instagram, ArrowRight } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { submitContactForm, subscribeNewsletter } from '@/lib/database'
 
@@ -156,12 +156,12 @@ export default function ContactSection({ className = '', id }: ContactSectionPro
             </div>
 
             <div className="mt-10 flex gap-4">
-              <a href="https://instagram.com/karakoramalpine" target="_blank" rel="noopener noreferrer" className="w-10 h-10 border border-[#1E293B] flex items-center justify-center text-[#A7B1C4] hover:text-[#D4A23A] hover:border-[#D4A23A] transition-all duration-300">
+              <a href="https://www.instagram.com/karakoramalpineclub/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 border border-[#1E293B] flex items-center justify-center text-[#A7B1C4] hover:text-[#D4A23A] hover:border-[#D4A23A] transition-all duration-300">
                 <Instagram className="w-5 h-5" />
               </a>
-              <a href="https://twitter.com/karakoramalpine" target="_blank" rel="noopener noreferrer" className="w-10 h-10 border border-[#1E293B] flex items-center justify-center text-[#A7B1C4] hover:text-[#D4A23A] hover:border-[#D4A23A] transition-all duration-300">
+              {/* <a href="https://twitter.com/karakoramalpine" target="_blank" rel="noopener noreferrer" className="w-10 h-10 border border-[#1E293B] flex items-center justify-center text-[#A7B1C4] hover:text-[#D4A23A] hover:border-[#D4A23A] transition-all duration-300">
                 <Twitter className="w-5 h-5" />
-              </a>
+              </a> */}
             </div>
 
             <div className="mt-12">

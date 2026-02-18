@@ -147,8 +147,8 @@ export default function HeroSection({ className = '', onJoinClick }: HeroSection
         className="absolute inset-0"
       >
         <img
-          src="https://images.unsplash.com/photo-gpvzeM0Kmgw?w=1920&q=85&fit=crop"
-          alt="K2 Mountain Pakistan"
+          src="https://images.pexels.com/photos/35302566/pexels-photo-35302566.jpeg?auto=compress&cs=tinysrgb&w=1920"
+          alt="Hunza Valley Pakistan"
           className="w-full h-full object-cover object-center"
           style={{ filter: 'saturate(0.85) contrast(1.1) brightness(0.85)' }}
         />
