@@ -5,15 +5,20 @@ import HeroSection from './sections/HeroSection'
 import EventsSection from './sections/EventsSection'
 import StoriesSection from './sections/StoriesSection'
 import ContactSection from './sections/ContactSection'
+import StoryDetail from './sections/StoryDetail'
+import EventDetail from './sections/EventDetail'
 import AdminPanel from './sections/AdminPanel'
 import MembershipForm from './components/MembershipForm'
 import { supabase } from './lib/supabase'
 import { signOut } from './lib/database'
+import type { StoryRow, EventRow } from './lib/database'
 
 function App() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [showAdmin, setShowAdmin] = useState(false)
   const [showMembershipForm, setShowMembershipForm] = useState(false)
+  const [selectedStory, setSelectedStory] = useState<StoryRow | null>(null)
+  const [selectedEvent, setSelectedEvent] = useState<EventRow | null>(null)
   const snapInitialized = useRef(false)
 
   useEffect(() => {
@@ -118,11 +123,26 @@ function App() {
       {/* Membership Form Modal */}
       <MembershipForm isOpen={showMembershipForm} onClose={() => setShowMembershipForm(false)} />
 
+      {/* Full-page detail views */}
+      {selectedStory && (
+        <StoryDetail story={selectedStory} onClose={() => setSelectedStory(null)} />
+      )}
+      {selectedEvent && (
+        <EventDetail
+          event={selectedEvent}
+          onClose={() => setSelectedEvent(null)}
+          onRegisterClick={() => {
+            setSelectedEvent(null)
+            setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100)
+          }}
+        />
+      )}
+
       {/* Main content */}
       <main className="relative">
         <HeroSection className="z-section-1" onJoinClick={() => setShowMembershipForm(true)} />
-        <EventsSection className="z-section-2" id="events" />
-        <StoriesSection className="z-section-3" id="stories" />
+        <EventsSection className="z-section-2" id="events" onEventClick={setSelectedEvent} />
+        <StoriesSection className="z-section-3" id="stories" onStoryClick={setSelectedStory} />
         <ContactSection className="z-section-4" id="contact" />
       </main>
     </div>

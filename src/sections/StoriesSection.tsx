@@ -6,9 +6,10 @@ import type { StoryRow } from '@/lib/database'
 interface StoriesSectionProps {
   className?: string
   id?: string
+  onStoryClick?: (story: StoryRow) => void
 }
 
-export default function StoriesSection({ className = '', id }: StoriesSectionProps) {
+export default function StoriesSection({ className = '', id, onStoryClick }: StoriesSectionProps) {
   const fallbackStoryImage = 'https://images.pexels.com/photos/14282937/pexels-photo-14282937.jpeg?auto=compress&cs=tinysrgb&w=800'
   const sectionRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
@@ -126,7 +127,7 @@ export default function StoriesSection({ className = '', id }: StoriesSectionPro
               <article
                 key={story.id}
                 ref={(el) => { cardsRef.current[index] = el }}
-                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => onStoryClick?.(story)}
                 className="group cursor-pointer opacity-0"
               >
                 <div className="relative aspect-[16/10] overflow-hidden">
@@ -149,13 +150,10 @@ export default function StoriesSection({ className = '', id }: StoriesSectionPro
                     {story.title}
                   </h3>
                   <p className="body-text mt-2 text-sm">{story.excerpt}</p>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }) }}
-                    className="cta-underline flex items-center gap-2 mt-4 text-[#F2F5FA] text-sm font-medium"
-                  >
+                  <span className="cta-underline flex items-center gap-2 mt-4 text-[#F2F5FA] text-sm font-medium">
                     <span>Read more</span>
                     <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </button>
+                  </span>
                 </div>
               </article>
             ))}

@@ -6,9 +6,10 @@ import type { EventRow } from '@/lib/database'
 interface EventsSectionProps {
   className?: string
   id?: string
+  onEventClick?: (event: EventRow) => void
 }
 
-export default function EventsSection({ className = '', id }: EventsSectionProps) {
+export default function EventsSection({ className = '', id, onEventClick }: EventsSectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const cardsRef = useRef<(HTMLElement | null)[]>([])
@@ -133,7 +134,8 @@ export default function EventsSection({ className = '', id }: EventsSectionProps
               <article
                 key={event.id}
                 ref={(el) => { cardsRef.current[index] = el }}
-                className="bg-[#141B26] border border-[#1E293B] p-6 opacity-0 group hover:border-[#D4A23A]/30 transition-colors duration-300"
+                onClick={() => onEventClick?.(event)}
+                className="bg-[#141B26] border border-[#1E293B] p-6 opacity-0 group hover:border-[#D4A23A]/30 transition-colors duration-300 cursor-pointer"
               >
                 {/* Status badge */}
                 <span className={`inline-block px-2 py-1 text-xs font-mono uppercase tracking-wider ${statusColors[event.status]}`}>
@@ -183,13 +185,10 @@ export default function EventsSection({ className = '', id }: EventsSectionProps
                 </p>
 
                 {/* CTA */}
-                <button
-                  onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="cta-underline flex items-center gap-2 mt-5 text-[#F2F5FA] text-sm font-medium"
-                >
-                  <span>Learn more</span>
+                <span className="cta-underline flex items-center gap-2 mt-5 text-[#F2F5FA] text-sm font-medium">
+                  <span>View details</span>
                   <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </button>
+                </span>
               </article>
             ))}
           </div>
