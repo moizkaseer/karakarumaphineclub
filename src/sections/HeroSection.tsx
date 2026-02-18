@@ -10,6 +10,7 @@ export default function HeroSection({ className = '', onJoinClick }: HeroSection
   const sectionRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const subRef = useRef<HTMLParagraphElement>(null)
+  const taglineRef = useRef<HTMLParagraphElement>(null)
   const ctaRef = useRef<HTMLDivElement>(null)
   const bottomLeftRef = useRef<HTMLDivElement>(null)
   const bottomRightRef = useRef<HTMLDivElement>(null)
@@ -67,12 +68,20 @@ export default function HeroSection({ className = '', onJoinClick }: HeroSection
         0.8
       )
 
+      // Tagline
+      entranceTl.fromTo(
+        taglineRef.current,
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' },
+        0.9
+      )
+
       // CTAs
       entranceTl.fromTo(
         ctaRef.current,
         { y: 20, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' },
-        0.95
+        1.05
       )
 
       // Bottom elements
@@ -112,7 +121,7 @@ export default function HeroSection({ className = '', onJoinClick }: HeroSection
 
       // Content exit
       scrollTl.fromTo(
-        [titleRef.current, subRef.current, ctaRef.current],
+        [titleRef.current, subRef.current, taglineRef.current, ctaRef.current],
         { y: 0, opacity: 1 },
         { y: '-12vh', opacity: 0, ease: 'power2.in', stagger: 0.02 },
         0.65
@@ -169,9 +178,18 @@ export default function HeroSection({ className = '', onJoinClick }: HeroSection
         {/* Subheadline */}
         <p
           ref={subRef}
-          className="label-mono mt-6 text-center"
+          className="label-clamp mt-6 text-center"
+          
         >
           ALPINE CLUB / EXPEDITION • CONSERVATION
+        </p>
+
+        {/* Tagline */}
+        <p
+          ref={taglineRef}
+         className="mt-4 text-center max-w-xl px-6 text-sm leading-relaxed text-white drop-shadow-lg shadow-black"
+        >
+          The Club fosters a community of alpine athletes dedicated to the responsible exploration, education, and environmental protection of the Karakoram.
         </p>
 
         {/* CTA Button */}
