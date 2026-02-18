@@ -2,8 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import Navigation from './components/Navigation'
 import HeroSection from './sections/HeroSection'
-import SummitMissionSection from './sections/SummitMissionSection'
-import SplitSection from './sections/SplitSection'
 import EventsSection from './sections/EventsSection'
 import StoriesSection from './sections/StoriesSection'
 import ContactSection from './sections/ContactSection'
@@ -123,20 +121,9 @@ function App() {
       {/* Main content */}
       <main className="relative">
         <HeroSection className="z-section-1" onJoinClick={() => setShowMembershipForm(true)} />
-        <SummitMissionSection className="z-section-2" />
-        <SplitSection
-          className="z-section-3"
-          label="IDENTITY"
-          headline="WHO WE ARE"
-          body="A small collective of guides, athletes, and conservationists from Gilgit-Baltistan. We cap membership to keep the mountains—and our community—healthy."
-          cta="Learn more"
-          caption="Baltoro Glacier • Pakistan"
-          image="/who_we_are.jpg"
-          layout="text-left"
-        />
-        <EventsSection className="z-section-4" id="events" />
-        <StoriesSection className="z-section-5" id="stories" />
-        <ContactSection className="z-section-6" id="contact" />
+        <EventsSection className="z-section-2" id="events" />
+        <StoriesSection className="z-section-3" id="stories" />
+        <ContactSection className="z-section-4" id="contact" />
       </main>
     </div>
   )

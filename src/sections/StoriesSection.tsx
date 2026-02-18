@@ -9,7 +9,7 @@ interface StoriesSectionProps {
 }
 
 export default function StoriesSection({ className = '', id }: StoriesSectionProps) {
-  const fallbackStoryImage = '/lady_finger.jpg'
+  const fallbackStoryImage = 'https://images.unsplash.com/photo-AjFiqo-PsfE?w=800&q=80&fit=crop'
   const sectionRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const cardsRef = useRef<(HTMLElement | null)[]>([])

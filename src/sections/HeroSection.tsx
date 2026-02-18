@@ -147,9 +147,9 @@ export default function HeroSection({ className = '', onJoinClick }: HeroSection
         className="absolute inset-0"
       >
         <img
-          src="/hero_sky.jpg"
+          src="https://images.unsplash.com/photo-gpvzeM0Kmgw?w=1920&q=85&fit=crop"
           alt="K2 Mountain Pakistan"
-          className="w-full h-full object-cover object-top"
+          className="w-full h-full object-cover object-center"
           style={{ filter: 'saturate(0.85) contrast(1.1) brightness(0.85)' }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F17]/40 via-transparent to-[#0B0F17]/70" />
