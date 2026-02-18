@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import { Plus, Trash2, Edit, Save, X, BookOpen, Eye, EyeOff } from 'lucide-react'
+import { Plus, Trash2, Edit, Save, X, BookOpen, Eye, EyeOff, Upload, Image, Loader2 } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
-import { getAllStories, createStory, updateStory, deleteStory } from '@/lib/database'
+import { getAllStories, createStory, updateStory, deleteStory, uploadStoryImage } from '@/lib/database'
 import type { StoryRow, StoryInsert, StoryUpdate } from '@/lib/database'
 
 export default function StoriesTab() {
@@ -12,6 +12,7 @@ export default function StoriesTab() {
   const [showDialog, setShowDialog] = useState(false)
   const [dialogMessage, setDialogMessage] = useState('')
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
 
   const [formData, setFormData] = useState<Partial<StoryInsert>>({
     title: '',
@@ -187,14 +188,67 @@ export default function StoriesTab() {
           </div>
 
           <div>
-            <label className="label-mono block mb-2">IMAGE URL</label>
-            <input
-              type="text"
-              value={formData.image}
-              onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-              placeholder="e.g., /story1.jpg or https://..."
-              className="w-full"
-            />
+            <label className="label-mono block mb-2">COVER IMAGE</label>
+
+            {/* Image preview */}
+            {formData.image && (
+              <div className="relative mb-3 aspect-[16/9] max-w-sm overflow-hidden border border-[#1E293B] bg-[#0B0F17]">
+                <img
+                  src={formData.image}
+                  alt="Preview"
+                  className="w-full h-full object-cover"
+                  onError={(e) => { e.currentTarget.style.display = 'none' }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, image: '' })}
+                  className="absolute top-2 right-2 p-1 bg-black/60 text-white hover:bg-red-500 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+
+            {/* Upload from device */}
+            <div className="flex items-center gap-3 mb-3">
+              <label className={`flex items-center gap-2 px-4 py-2.5 border border-[#1E293B] bg-[#141B26] text-[#A7B1C4] hover:border-[#D4A23A] hover:text-[#D4A23A] transition-colors cursor-pointer ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                <span className="text-sm font-mono">{uploading ? 'Uploading...' : 'Upload from device'}</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  disabled={uploading}
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0]
+                    if (!file) return
+                    setUploading(true)
+                    const { data, error } = await uploadStoryImage(file)
+                    if (error) {
+                      setDialogMessage('Upload failed: ' + error.message)
+                      setShowDialog(true)
+                    } else if (data) {
+                      setFormData(prev => ({ ...prev, image: data }))
+                    }
+                    setUploading(false)
+                    e.target.value = ''
+                  }}
+                />
+              </label>
+              <span className="text-xs text-[#A7B1C4] font-mono">or</span>
+            </div>
+
+            {/* Paste URL */}
+            <div className="flex items-center gap-2">
+              <Image className="w-4 h-4 text-[#A7B1C4] flex-shrink-0" />
+              <input
+                type="text"
+                value={formData.image}
+                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                placeholder="Paste image URL (https://...)"
+                className="w-full"
+              />
+            </div>
           </div>
 
           <div className="flex items-center gap-3">
@@ -300,8 +354,14 @@ export default function StoriesTab() {
               </p>
 
               {story.image && (
-                <div className="text-[#A7B1C4] text-xs font-mono truncate">
-                  {story.image}
+                <div className="mt-3 aspect-[16/9] overflow-hidden border border-[#1E293B]">
+                  <img
+                    src={story.image}
+                    alt={story.title}
+                    className="w-full h-full object-cover"
+                    style={{ filter: 'saturate(0.75) contrast(1.05)' }}
+                    onError={(e) => { e.currentTarget.style.display = 'none' }}
+                  />
                 </div>
               )}
 

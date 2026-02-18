@@ -220,6 +220,27 @@ CREATE POLICY "Admins can delete event images"
   ON storage.objects FOR DELETE TO authenticated
   USING (bucket_id = 'event-images' AND public.is_admin());
 
+-- 8b. STORY IMAGES BUCKET (safe to re-run)
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('story-images', 'story-images', true)
+ON CONFLICT (id) DO NOTHING;
+
+DROP POLICY IF EXISTS "Public read access for story images" ON storage.objects;
+DROP POLICY IF EXISTS "Admins can upload story images" ON storage.objects;
+DROP POLICY IF EXISTS "Admins can delete story images" ON storage.objects;
+
+CREATE POLICY "Public read access for story images"
+  ON storage.objects FOR SELECT
+  USING (bucket_id = 'story-images');
+
+CREATE POLICY "Admins can upload story images"
+  ON storage.objects FOR INSERT TO authenticated
+  WITH CHECK (bucket_id = 'story-images' AND public.is_admin());
+
+CREATE POLICY "Admins can delete story images"
+  ON storage.objects FOR DELETE TO authenticated
+  USING (bucket_id = 'story-images' AND public.is_admin());
+
 -- 9. SEED DATA: Delete old stories with broken image paths
 DELETE FROM public.stories
 WHERE image IN ('/lady_finger.jpg', '/passu_cones.jpg', '/who_we_are.jpg');

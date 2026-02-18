@@ -182,3 +182,22 @@ export async function deleteEventImage(filePath: string) {
     return { data: null, error: new Error('Invalid image URL') }
   }
 }
+
+// ==================== STORAGE (Story Images) ====================
+
+export async function uploadStoryImage(file: File) {
+  const fileExt = file.name.split('.').pop()
+  const fileName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${fileExt}`
+
+  const { data, error } = await supabase.storage
+    .from('story-images')
+    .upload(fileName, file)
+
+  if (error) return { data: null, error }
+
+  const { data: urlData } = supabase.storage
+    .from('story-images')
+    .getPublicUrl(data.path)
+
+  return { data: urlData.publicUrl, error: null }
+}
