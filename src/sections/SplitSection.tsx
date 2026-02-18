@@ -183,8 +183,8 @@ export default function SplitSection({
         <img
           src={image}
           alt={headline}
-          className="w-full h-full object-cover"
-          style={{ filter: 'saturate(0.75) contrast(1.05)' }}
+          className="w-full h-full object-cover object-top"
+          style={{ filter: 'saturate(0.8) contrast(1.1) brightness(0.85)' }}
         />
         <div
           className={`absolute inset-0 bg-gradient-to-${

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import Navigation from './components/Navigation'
 import HeroSection from './sections/HeroSection'
@@ -11,7 +11,6 @@ import AdminPanel from './sections/AdminPanel'
 import MembershipForm from './components/MembershipForm'
 import { supabase } from './lib/supabase'
 import { signOut } from './lib/database'
-import type { Session } from '@supabase/supabase-js'
 
 function App() {
   const [isAdmin, setIsAdmin] = useState(false)
@@ -19,80 +18,55 @@ function App() {
   const [showMembershipForm, setShowMembershipForm] = useState(false)
   const snapInitialized = useRef(false)
 
-  const hasSupabaseAdminAccess = useCallback(async (session: Session | null) => {
-    if (!session) return false
-
-    const { data, error } = await supabase.rpc('is_admin')
-
-    if (error) {
-      console.error('Failed to validate admin access:', error.message)
-      return false
-    }
-
-    return Boolean(data)
-  }, [])
-
   useEffect(() => {
-    const syncAdminState = async (session: Session | null) => {
-      const hasAdminAccess = await hasSupabaseAdminAccess(session)
-      setIsAdmin(hasAdminAccess)
-
-      if (session && !hasAdminAccess) {
-        await signOut()
-      }
-    }
-
     supabase.auth.getSession().then(({ data: { session } }) => {
-      void syncAdminState(session)
+      setIsAdmin(!!session)
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        void syncAdminState(session)
+        setIsAdmin(!!session)
       }
     )
 
     return () => subscription.unsubscribe()
-  }, [hasSupabaseAdminAccess])
+  }, [])
 
-  // Global Scroll Snap for pinned sections - optimized
+  // Global Scroll Snap for pinned sections
   useEffect(() => {
     const initSnap = () => {
       if (!window.gsap || !window.ScrollTrigger || snapInitialized.current) return
 
       const ScrollTrigger = window.ScrollTrigger
 
-      // Wait for all ScrollTriggers to be created
       setTimeout(() => {
-        type PinnedTrigger = { vars?: { pin?: unknown }; start: number; end?: number }
-        const allTriggers = ScrollTrigger.getAll() as PinnedTrigger[]
-        const pinned = allTriggers
-          .filter((st) => Boolean(st.vars?.pin))
-          .sort((a, b) => a.start - b.start)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const allTriggers = ScrollTrigger.getAll()
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const pinned = allTriggers.filter((st: any) => st.vars.pin)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .sort((a: any, b: any) => a.start - b.start)
 
         const maxScroll = ScrollTrigger.maxScroll(window)
 
         if (!maxScroll || pinned.length === 0) return
 
-        // Build ranges and snap targets from pinned sections
-        const pinnedRanges = pinned.map((st: { start: number; end?: number }) => ({
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const pinnedRanges = pinned.map((st: any) => ({
           start: st.start / maxScroll,
           end: (st.end ?? st.start) / maxScroll,
           center: (st.start + ((st.end ?? st.start) - st.start) * 0.5) / maxScroll,
         }))
 
-        // Create global snap - optimized
         ScrollTrigger.create({
           snap: {
             snapTo: (value: number) => {
-              // Check if within any pinned range (with buffer)
               const inPinned = pinnedRanges.some(
                 (r: { start: number; end: number }) => value >= r.start - 0.02 && value <= r.end + 0.02
               )
 
-              if (!inPinned) return value // Flowing section: free scroll
+              if (!inPinned) return value
 
-              // Find nearest pinned center
               const target = pinnedRanges.reduce(
                 (closest: number, r: { center: number }) =>
                   Math.abs(r.center - value) < Math.abs(closest - value)
@@ -127,16 +101,8 @@ function App() {
     setShowAdmin(false)
   }
 
-  const handleAdminLogin = async () => {
-    const { data: { session } } = await supabase.auth.getSession()
-    const hasAdminAccess = await hasSupabaseAdminAccess(session)
-
-    if (!hasAdminAccess && session) {
-      await signOut()
-    }
-
-    setIsAdmin(hasAdminAccess)
-    return hasAdminAccess
+  const handleAdminLogin = () => {
+    setIsAdmin(true)
   }
 
   if (showAdmin) {
@@ -156,13 +122,8 @@ function App() {
 
       {/* Main content */}
       <main className="relative">
-        {/* Section 1: Hero */}
         <HeroSection className="z-section-1" onJoinClick={() => setShowMembershipForm(true)} />
-        
-        {/* Section 2: Summit Mission */}
         <SummitMissionSection className="z-section-2" />
-
-        {/* Section 3: Who We Are - Text Left / Image Right */}
         <SplitSection
           className="z-section-3"
           label="IDENTITY"
@@ -173,14 +134,8 @@ function App() {
           image="/who_we_are.jpg"
           layout="text-left"
         />
-
-        {/* Section 4: Events */}
         <EventsSection className="z-section-4" id="events" />
-
-        {/* Section 5: Stories */}
         <StoriesSection className="z-section-5" id="stories" />
-
-        {/* Section 6: Contact */}
         <ContactSection className="z-section-6" id="contact" />
       </main>
     </div>
