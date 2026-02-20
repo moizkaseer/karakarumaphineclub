@@ -42,7 +42,6 @@ export default function SplitSection({
       if (!window.gsap || !window.ScrollTrigger) return
 
       const gsap = window.gsap
-      const ScrollTrigger = window.ScrollTrigger
 
       const scrollTl = gsap.timeline({
         scrollTrigger: {
@@ -150,7 +149,8 @@ export default function SplitSection({
       )
 
       return () => {
-        ScrollTrigger.getAll().forEach((st: { kill: () => void }) => st.kill())
+        scrollTl.scrollTrigger?.kill()
+        scrollTl.kill()
       }
     }
 
@@ -165,31 +165,35 @@ export default function SplitSection({
       className={`section-pinned ${className}`}
       style={{ height: '100vh', width: '100vw', position: 'relative', overflow: 'hidden' }}
     >
-      {/* Panel */}
+      {/* Panel — on mobile: full width overlay, on desktop: side panel */}
       <div
         ref={panelRef}
         className={`absolute top-0 ${
           isTextLeft ? 'left-0' : 'right-0'
-        } w-[44vw] h-full bg-[#0B0F17] z-[5]`}
+        } w-full md:w-[44vw] h-full bg-[#0B0F17] md:bg-[#0B0F17] z-[5] md:z-[5] hidden md:block`}
       />
 
-      {/* Image */}
+      {/* Image — on mobile: full bleed behind content, on desktop: side panel */}
       <div
         ref={imageRef}
-        className={`absolute top-0 ${
-          isTextLeft ? 'right-0' : 'left-0'
-        } w-[56vw] h-full overflow-hidden z-[1]`}
+        className={`absolute inset-0 md:top-0 ${
+          isTextLeft ? 'md:right-0 md:left-auto' : 'md:left-0 md:right-auto'
+        } md:w-[56vw] h-full overflow-hidden z-[1]`}
       >
         <img
           src={image}
           alt={headline}
           className="w-full h-full object-cover object-top"
+          width={1920}
+          height={1080}
+          loading="lazy"
           style={{ filter: 'saturate(0.8) contrast(1.1) brightness(0.85)' }}
         />
+        {/* Mobile: full gradient overlay for readability. Desktop: directional gradient */}
         <div
-          className={`absolute inset-0 bg-gradient-to-${
+          className={`absolute inset-0 bg-gradient-to-t from-[#0B0F17]/90 via-[#0B0F17]/60 to-[#0B0F17]/30 md:bg-gradient-to-${
             isTextLeft ? 'l' : 'r'
-          } from-[#0B0F17]/50 to-transparent`}
+          } md:from-[#0B0F17]/50 md:via-transparent md:to-transparent`}
         />
       </div>
 
@@ -206,11 +210,11 @@ export default function SplitSection({
         </span>
       </div>
 
-      {/* Text Content */}
+      {/* Text Content — mobile: centered over image, desktop: side panel */}
       <div
-        className={`absolute ${
-          isTextLeft ? 'left-[6vw]' : 'left-[62vw]'
-        } top-[22vh] z-10 max-w-[32vw]`}
+        className={`absolute left-[6vw] ${
+          isTextLeft ? 'md:left-[6vw]' : 'md:left-[62vw]'
+        } top-[30vh] md:top-[22vh] z-10 max-w-[88vw] md:max-w-[32vw]`}
       >
         <h2
           ref={headlineRef}

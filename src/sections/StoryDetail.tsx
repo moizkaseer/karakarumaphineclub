@@ -50,6 +50,8 @@ export default function StoryDetail({ story, onClose }: StoryDetailProps) {
           src={story.image || fallbackImage}
           alt={story.title}
           className="w-full h-full object-cover"
+          width={1920}
+          height={1080}
           style={{ filter: 'saturate(0.8) contrast(1.05) brightness(0.75)' }}
           onError={(e) => { e.currentTarget.src = fallbackImage }}
         />

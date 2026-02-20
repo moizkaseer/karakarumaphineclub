@@ -59,6 +59,8 @@ export default function EventDetail({ event, onClose, onRegisterClick }: EventDe
           src={event.images[0] || fallbackImage}
           alt={event.title}
           className="w-full h-full object-cover"
+          width={1920}
+          height={1080}
           style={{ filter: 'saturate(0.8) contrast(1.05) brightness(0.75)' }}
           onError={(e) => { e.currentTarget.src = fallbackImage }}
         />
@@ -127,6 +129,9 @@ export default function EventDetail({ event, onClose, onRegisterClick }: EventDe
                     src={img}
                     alt={`${event.title} ${i + 2}`}
                     className="w-full h-full object-cover"
+                    loading="lazy"
+                    width={640}
+                    height={480}
                     style={{ filter: 'saturate(0.75) contrast(1.05)' }}
                   />
                 </div>

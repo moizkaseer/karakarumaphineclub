@@ -88,28 +88,29 @@ export default function StoriesSection({ className = '', id, onStoryClick }: Sto
     <section
       ref={sectionRef}
       id={id}
-      className={`relative bg-[#141B26] py-[10vh] ${className}`}
+      className={`relative bg-[#0F1520] py-[10vh] ${className}`}
     >
-      <div className="mx-[4vw] hairline" />
+      {/* Gold accent line at top */}
+      <div className="mx-[4vw] h-px bg-gradient-to-r from-transparent via-[#D4A23A]/30 to-[#D4A23A]/60" />
 
       <div className="px-[4vw] pt-[6vh]" ref={contentRef}>
-        <span className="label-mono block opacity-0">
+        <span className="label-mono block opacity-0 text-[#D4A23A]">
           JOURNAL
         </span>
 
         <h2
-          className="headline-display mt-4 max-w-[52vw] opacity-0"
+          className="headline-display mt-4 opacity-0"
           style={{ fontSize: 'clamp(32px, 5vw, 64px)' }}
         >
-          STORIES FROM THE RANGE
+          STORIES FROM <span className="text-[#D4A23A]">THE RANGE</span>
         </h2>
 
-        <p className="body-text mt-4 max-w-[46vw] opacity-0">
+        <p className="body-text mt-4 max-w-lg opacity-0">
           Trip notes, conservation updates, and field lessons—written by guides and members.
         </p>
 
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
             {[1, 2, 3].map(i => (
               <div key={i} className="animate-pulse">
                 <div className="aspect-[16/10] bg-[#1E293B]" />
@@ -122,39 +123,48 @@ export default function StoriesSection({ className = '', id, onStoryClick }: Sto
         ) : stories.length === 0 ? (
           <p className="body-text mt-12">No stories published yet.</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
             {stories.map((story, index) => (
               <article
                 key={story.id}
                 ref={(el) => { cardsRef.current[index] = el }}
                 onClick={() => onStoryClick?.(story)}
-                className="group cursor-pointer opacity-0"
+                className="group cursor-pointer opacity-0 bg-[#141B26] border border-[#1E293B] hover:border-[#D4A23A]/30 hover:shadow-lg hover:shadow-[#D4A23A]/5 transition-all duration-300 overflow-hidden"
               >
+                {/* Image — no desaturation */}
                 <div className="relative aspect-[16/10] overflow-hidden">
                   <img
                     src={story.image || fallbackStoryImage}
                     alt={story.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    style={{ filter: 'saturate(0.75) contrast(1.05)' }}
+                    loading="lazy"
+                    width={640}
+                    height={400}
                     onError={(event) => {
                       if (event.currentTarget.src.endsWith(fallbackStoryImage)) return
                       event.currentTarget.src = fallbackStoryImage
                     }}
                   />
-                  <div className="absolute inset-0 bg-[#0B0F17]/20 group-hover:bg-transparent transition-colors duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#141B26] via-transparent to-transparent opacity-60" />
+                  {/* Category badge over image */}
+                  <span className="absolute top-3 left-3 px-3 py-1 text-xs font-mono uppercase tracking-wider bg-[#D4A23A]/90 text-[#0B0F17] font-semibold">
+                    {story.category}
+                  </span>
                 </div>
 
-                <div className="mt-4">
-                  <span className="caption-mono text-[#D4A23A]">{story.category}</span>
-                  <h3 className="font-display font-bold text-xl text-[#F2F5FA] mt-2 group-hover:text-[#D4A23A] transition-colors duration-300">
+                <div className="p-5">
+                  <h3 className="font-display font-bold text-xl text-[#F2F5FA] group-hover:text-[#D4A23A] transition-colors duration-300">
                     {story.title}
                   </h3>
-                  <p className="body-text mt-2 text-sm">{story.excerpt}</p>
-                  <span className="cta-underline flex items-center gap-2 mt-4 text-[#F2F5FA] text-sm font-medium">
+                  <p className="body-text mt-2 text-sm line-clamp-2">{story.excerpt}</p>
+                  <span className="cta-underline flex items-center gap-2 mt-4 text-[#D4A23A] text-sm font-medium">
                     <span>Read more</span>
                     <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                   </span>
                 </div>
+
+                {/* Bottom gold accent */}
+                <div className="h-px bg-gradient-to-r from-[#D4A23A]/40 via-[#D4A23A]/20 to-transparent" />
               </article>
             ))}
           </div>

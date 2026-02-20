@@ -1,15 +1,5 @@
 /* App-specific styles */
 
-/* Smooth scroll behavior for the entire page */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Ensure pinned sections stack properly */
-.section-pinned {
-  will-change: transform, opacity;
-}
-
 /* Animation keyframes */
 @keyframes fadeInUp {
   from {

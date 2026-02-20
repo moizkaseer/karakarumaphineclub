@@ -20,7 +20,6 @@ export default function SummitMissionSection({ className = '' }: SummitMissionSe
       if (!window.gsap || !window.ScrollTrigger) return
 
       const gsap = window.gsap
-      const ScrollTrigger = window.ScrollTrigger
 
       // Create scroll-driven animation timeline - optimized
       const scrollTl = gsap.timeline({
@@ -115,7 +114,8 @@ export default function SummitMissionSection({ className = '' }: SummitMissionSe
       )
 
       return () => {
-        ScrollTrigger.getAll().forEach((st: { kill: () => void }) => st.kill())
+        scrollTl.scrollTrigger?.kill()
+        scrollTl.kill()
       }
     }
 
@@ -136,12 +136,15 @@ export default function SummitMissionSection({ className = '' }: SummitMissionSe
         className="absolute inset-0"
       >
         <img
-          src="/passu_cones.jpg"
+          src="/P1077078-Modifier.webp"
           alt="Passu Cones Pakistan"
           className="w-full h-full object-cover object-top"
+          width={1920}
+          height={1080}
+          loading="lazy"
           style={{ filter: 'saturate(0.8) contrast(1.1) brightness(0.8)' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0B0F17]/70 via-[#0B0F17]/30 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#0B0F17]/80 via-[#0B0F17]/50 to-transparent md:from-[#0B0F17]/70 md:via-[#0B0F17]/30" />
       </div>
 
       {/* Hairline */}
@@ -161,12 +164,12 @@ export default function SummitMissionSection({ className = '' }: SummitMissionSe
       </div>
 
       {/* Content */}
-      <div className="absolute left-[6vw] top-[22vh] z-10 max-w-[62vw]">
+      <div className="absolute left-[6vw] top-[18vh] md:top-[22vh] z-10 max-w-[88vw] md:max-w-[62vw]">
         {/* Headline */}
         <h2
           ref={headlineRef}
           className="headline-display"
-          style={{ fontSize: 'clamp(40px, 7vw, 96px)' }}
+          style={{ fontSize: 'clamp(32px, 7vw, 96px)' }}
         >
           CLIMB HIGHER.<br />LEAVE LESS.
         </h2>
@@ -174,7 +177,7 @@ export default function SummitMissionSection({ className = '' }: SummitMissionSe
         {/* Body */}
         <p
           ref={bodyRef}
-          className="body-text mt-8 max-w-[34vw] text-base"
+          className="body-text mt-6 md:mt-8 max-w-[80vw] md:max-w-[34vw] text-sm md:text-base"
         >
           We organize human-powered ascents across the Karakoram and Himalaya—then 
           reinvest every surplus into trail restoration, waste removal, and local stewardship.

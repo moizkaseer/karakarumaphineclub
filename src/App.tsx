@@ -1,25 +1,36 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState, lazy, Suspense } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import './App.css'
 import Navigation from './components/Navigation'
-import HeroSection from './sections/HeroSection'
-import EventsSection from './sections/EventsSection'
-import StoriesSection from './sections/StoriesSection'
-import ContactSection from './sections/ContactSection'
-import StoryDetail from './sections/StoryDetail'
-import EventDetail from './sections/EventDetail'
 import AdminPanel from './sections/AdminPanel'
 import MembershipForm from './components/MembershipForm'
 import { supabase } from './lib/supabase'
 import { signOut } from './lib/database'
-import type { StoryRow, EventRow } from './lib/database'
+
+// Lazy-loaded pages — each page is only downloaded when the user navigates to it
+const HomePage = lazy(() => import('./pages/HomePage'))
+const EventsPage = lazy(() => import('./pages/EventsPage'))
+const StoriesPage = lazy(() => import('./pages/StoriesPage'))
+const TeamPage = lazy(() => import('./pages/TeamPage'))
+const ContactPage = lazy(() => import('./pages/ContactPage'))
+const AboutPage = lazy(() => import('./pages/AboutPage'))
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
+
+function PageLoader() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="flex flex-col items-center gap-4">
+        <div className="w-8 h-8 border-2 border-[#D4A23A]/30 border-t-[#D4A23A] rounded-full animate-spin" />
+        <span className="caption-mono text-[#D4A23A]">Loading...</span>
+      </div>
+    </div>
+  )
+}
 
 function App() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [showAdmin, setShowAdmin] = useState(false)
   const [showMembershipForm, setShowMembershipForm] = useState(false)
-  const [selectedStory, setSelectedStory] = useState<StoryRow | null>(null)
-  const [selectedEvent, setSelectedEvent] = useState<EventRow | null>(null)
-  const snapInitialized = useRef(false)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -33,65 +44,6 @@ function App() {
     )
 
     return () => subscription.unsubscribe()
-  }, [])
-
-  // Global Scroll Snap for pinned sections
-  useEffect(() => {
-    const initSnap = () => {
-      if (!window.gsap || !window.ScrollTrigger || snapInitialized.current) return
-
-      const ScrollTrigger = window.ScrollTrigger
-
-      setTimeout(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const allTriggers = ScrollTrigger.getAll()
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const pinned = allTriggers.filter((st: any) => st.vars.pin)
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .sort((a: any, b: any) => a.start - b.start)
-
-        const maxScroll = ScrollTrigger.maxScroll(window)
-
-        if (!maxScroll || pinned.length === 0) return
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const pinnedRanges = pinned.map((st: any) => ({
-          start: st.start / maxScroll,
-          end: (st.end ?? st.start) / maxScroll,
-          center: (st.start + ((st.end ?? st.start) - st.start) * 0.5) / maxScroll,
-        }))
-
-        ScrollTrigger.create({
-          snap: {
-            snapTo: (value: number) => {
-              const inPinned = pinnedRanges.some(
-                (r: { start: number; end: number }) => value >= r.start - 0.02 && value <= r.end + 0.02
-              )
-
-              if (!inPinned) return value
-
-              const target = pinnedRanges.reduce(
-                (closest: number, r: { center: number }) =>
-                  Math.abs(r.center - value) < Math.abs(closest - value)
-                    ? r.center
-                    : closest,
-                pinnedRanges[0]?.center ?? 0
-              )
-
-              return target
-            },
-            duration: { min: 0.1, max: 0.25 },
-            delay: 0,
-            ease: 'power2.out',
-          },
-        })
-
-        snapInitialized.current = true
-      }, 1200)
-    }
-
-    const timer = setTimeout(initSnap, 800)
-    return () => clearTimeout(timer)
   }, [])
 
   const handleAdminAccess = () => {
@@ -123,28 +75,18 @@ function App() {
       {/* Membership Form Modal */}
       <MembershipForm isOpen={showMembershipForm} onClose={() => setShowMembershipForm(false)} />
 
-      {/* Full-page detail views */}
-      {selectedStory && (
-        <StoryDetail story={selectedStory} onClose={() => setSelectedStory(null)} />
-      )}
-      {selectedEvent && (
-        <EventDetail
-          event={selectedEvent}
-          onClose={() => setSelectedEvent(null)}
-          onRegisterClick={() => {
-            setSelectedEvent(null)
-            setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100)
-          }}
-        />
-      )}
-
-      {/* Main content */}
-      <main className="relative">
-        <HeroSection className="z-section-1" onJoinClick={() => setShowMembershipForm(true)} />
-        <EventsSection className="z-section-2" id="events" onEventClick={setSelectedEvent} />
-        <StoriesSection className="z-section-3" id="stories" onStoryClick={setSelectedStory} />
-        <ContactSection className="z-section-4" id="contact" />
-      </main>
+      {/* Routes — Suspense shows a spinner while a page chunk loads */}
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/" element={<HomePage onJoinClick={() => setShowMembershipForm(true)} />} />
+          <Route path="/events" element={<EventsPage />} />
+          <Route path="/stories" element={<StoriesPage />} />
+          <Route path="/team" element={<TeamPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Suspense>
     </div>
   )
 }

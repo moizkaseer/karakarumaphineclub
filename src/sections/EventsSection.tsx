@@ -85,9 +85,9 @@ export default function EventsSection({ className = '', id, onEventClick }: Even
   }, [events])
 
   const statusColors = {
-    upcoming: 'bg-green-500/20 text-green-400',
-    ongoing: 'bg-blue-500/20 text-blue-400',
-    completed: 'bg-gray-500/20 text-gray-400',
+    upcoming: 'bg-[#D4A23A]/15 text-[#D4A23A] border border-[#D4A23A]/30',
+    ongoing: 'bg-blue-500/15 text-blue-400 border border-blue-500/30',
+    completed: 'bg-gray-500/15 text-gray-400 border border-gray-500/30',
   }
 
   return (
@@ -96,21 +96,22 @@ export default function EventsSection({ className = '', id, onEventClick }: Even
       id={id}
       className={`relative bg-[#0B0F17] py-[10vh] ${className}`}
     >
-      <div className="mx-[4vw] hairline" />
+      {/* Gold accent line at top */}
+      <div className="mx-[4vw] h-px bg-gradient-to-r from-[#D4A23A]/60 via-[#D4A23A]/20 to-transparent" />
 
       <div className="px-[4vw] pt-[6vh]" ref={contentRef}>
-        <span className="label-mono block opacity-0">
+        <span className="label-mono block opacity-0 text-[#D4A23A]">
           UPCOMING
         </span>
 
         <h2
-          className="headline-display mt-4 max-w-[52vw] opacity-0"
+          className="headline-display mt-4 opacity-0"
           style={{ fontSize: 'clamp(32px, 5vw, 64px)' }}
         >
-          EVENTS & EXPEDITIONS
+          EVENTS <span className="text-[#D4A23A]">&</span> EXPEDITIONS
         </h2>
 
-        <p className="body-text mt-4 max-w-[46vw] opacity-0">
+        <p className="body-text mt-4 max-w-lg opacity-0">
           Join our upcoming treks, cleanup drives, and training sessions across the Karakoram range.
         </p>
 
@@ -135,10 +136,10 @@ export default function EventsSection({ className = '', id, onEventClick }: Even
                 key={event.id}
                 ref={(el) => { cardsRef.current[index] = el }}
                 onClick={() => onEventClick?.(event)}
-                className="bg-[#141B26] border border-[#1E293B] p-6 opacity-0 group hover:border-[#D4A23A]/30 transition-colors duration-300 cursor-pointer"
+                className="bg-[#141B26] border border-[#1E293B] border-l-2 border-l-[#D4A23A]/40 p-6 opacity-0 group hover:border-[#D4A23A]/40 hover:shadow-lg hover:shadow-[#D4A23A]/5 transition-all duration-300 cursor-pointer"
               >
                 {/* Status badge */}
-                <span className={`inline-block px-2 py-1 text-xs font-mono uppercase tracking-wider ${statusColors[event.status]}`}>
+                <span className={`inline-block px-3 py-1 text-xs font-mono uppercase tracking-wider ${statusColors[event.status]}`}>
                   {event.status}
                 </span>
 
@@ -147,15 +148,19 @@ export default function EventsSection({ className = '', id, onEventClick }: Even
                   {event.title}
                 </h3>
 
-                {/* Event image */}
+                {/* Event image — no desaturation filter */}
                 {event.images.length > 0 && (
-                  <div className="mt-4 aspect-[16/10] overflow-hidden">
+                  <div className="mt-4 aspect-[16/10] overflow-hidden relative">
                     <img
                       src={event.images[0]}
                       alt={event.title}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      style={{ filter: 'saturate(0.75) contrast(1.05)' }}
+                      loading="lazy"
+                      width={640}
+                      height={400}
                     />
+                    {/* Subtle gold gradient overlay on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F17]/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </div>
                 )}
 
@@ -185,7 +190,7 @@ export default function EventsSection({ className = '', id, onEventClick }: Even
                 </p>
 
                 {/* CTA */}
-                <span className="cta-underline flex items-center gap-2 mt-5 text-[#F2F5FA] text-sm font-medium">
+                <span className="cta-underline flex items-center gap-2 mt-5 text-[#D4A23A] text-sm font-medium">
                   <span>View details</span>
                   <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                 </span>

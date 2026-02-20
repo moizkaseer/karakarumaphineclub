@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Send, Mail, MapPin, Phone, Instagram, ArrowRight } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { submitContactForm, subscribeNewsletter } from '@/lib/database'
@@ -128,7 +129,7 @@ export default function ContactSection({ className = '', id }: ContactSectionPro
       <div className="mx-[4vw] hairline mb-[6vh]" />
 
       <div className="px-[4vw]">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
           <div ref={leftColRef} className="opacity-0">
             <h2 className="headline-display" style={{ fontSize: 'clamp(32px, 5vw, 64px)' }}>
               CONTACT THE CLUB
@@ -150,7 +151,7 @@ export default function ContactSection({ className = '', id }: ContactSectionPro
                 <MapPin className="w-5 h-5 text-[#D4A23A] mt-1" />
                 <span className="text-[#F2F5FA]">
                   Karakoram Alpine Club<br />
-                  Gilgit-Baltistan, Pakistan
+                  Karim abad, Pakistan
                 </span>
               </div>
             </div>
@@ -168,7 +169,7 @@ export default function ContactSection({ className = '', id }: ContactSectionPro
               <h3 className="font-display font-semibold text-lg text-[#F2F5FA] mb-4">
                 Get quarterly updates
               </h3>
-              <form onSubmit={handleNewsletterSubmit} className="flex gap-3">
+              <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3">
                 <input
                   type="email"
                   placeholder="Your email"
@@ -231,15 +232,18 @@ export default function ContactSection({ className = '', id }: ContactSectionPro
         <div ref={footerRef} className="mt-20 pt-8 border-t border-[#1E293B] opacity-0">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="caption-mono text-center md:text-left">
-              © Karakoram Alpine Club. All rights reserved.
+              © {new Date().getFullYear()} Karakoram Alpine Club. All rights reserved.
             </p>
             <div className="flex gap-6">
-              <a href="/privacy.html" className="caption-mono hover:text-[#D4A23A] transition-colors">
-                Privacy Policy
-              </a>
-              <a href="/terms.html" className="caption-mono hover:text-[#D4A23A] transition-colors">
-                Terms of Service
-              </a>
+              <Link to="/about" className="caption-mono hover:text-[#D4A23A] transition-colors">
+                About
+              </Link>
+              <Link to="/events" className="caption-mono hover:text-[#D4A23A] transition-colors">
+                Events
+              </Link>
+              <Link to="/team" className="caption-mono hover:text-[#D4A23A] transition-colors">
+                Team
+              </Link>
             </div>
           </div>
         </div>

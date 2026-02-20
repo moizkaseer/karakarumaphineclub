@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { Mountain, Menu, X, Lock } from 'lucide-react'
 
 interface NavigationProps {
@@ -8,6 +9,7 @@ interface NavigationProps {
 export default function Navigation({ onAdminClick }: NavigationProps) {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const location = useLocation()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,24 +19,21 @@ export default function Navigation({ onAdminClick }: NavigationProps) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const scrollToSection = (sectionId: string) => {
-    if (sectionId === 'home') {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    } else {
-      const element = document.getElementById(sectionId)
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' })
-      }
-    }
+  // Close mobile menu on route change
+  useEffect(() => {
     setIsMobileMenuOpen(false)
-  }
+  }, [location.pathname])
 
   const navItems = [
-    { label: 'Home', id: 'home' },
-    { label: 'Events', id: 'events' },
-    { label: 'Stories', id: 'stories' },
-    { label: 'Contact', id: 'contact' },
+    { label: 'Home', path: '/' },
+    { label: 'About', path: '/about' },
+    { label: 'Events', path: '/events' },
+    { label: 'Stories', path: '/stories' },
+    { label: 'Team', path: '/team' },
+    { label: 'Contact', path: '/contact' },
   ]
+
+  const isActive = (path: string) => location.pathname === path
 
   return (
     <>
@@ -46,7 +45,7 @@ export default function Navigation({ onAdminClick }: NavigationProps) {
         }`}
       >
         {/* Main Navigation Container */}
-        <div 
+        <div
           className={`flex items-center gap-2 px-2 py-2 rounded-full transition-all duration-500 ${
             isScrolled
               ? 'bg-[#0B0F17]/85 backdrop-blur-md shadow-2xl shadow-black/30 border border-[#1E293B]/50'
@@ -54,15 +53,15 @@ export default function Navigation({ onAdminClick }: NavigationProps) {
           }`}
         >
           {/* Logo */}
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          <Link
+            to="/"
             className="flex items-center gap-2 px-4 py-2 rounded-full hover:bg-white/5 transition-all duration-300 group"
           >
             <Mountain className="w-5 h-5 text-[#D4A23A] transition-all duration-300 group-hover:scale-110 group-hover:rotate-12" />
             <span className="font-mono text-xs tracking-[0.2em] text-[#F2F5FA] font-medium hidden sm:block">
               KARAKORAM
             </span>
-          </button>
+          </Link>
 
           {/* Divider */}
           <div className="w-px h-6 bg-[#1E293B] hidden md:block" />
@@ -70,15 +69,21 @@ export default function Navigation({ onAdminClick }: NavigationProps) {
           {/* Desktop Navigation Items */}
           <div className="hidden md:flex items-center">
             {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className="relative px-4 py-2 text-xs font-mono tracking-[0.12em] text-[#A7B1C4] hover:text-[#F2F5FA] transition-all duration-300 group"
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`relative px-4 py-2 text-xs font-mono tracking-[0.12em] transition-all duration-300 group ${
+                  isActive(item.path)
+                    ? 'text-[#D4A23A]'
+                    : 'text-[#A7B1C4] hover:text-[#F2F5FA]'
+                }`}
               >
                 {item.label}
-                {/* Hover underline */}
-                <span className="absolute bottom-1 left-4 right-4 h-px bg-[#D4A23A] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-              </button>
+                {/* Active / hover underline */}
+                <span className={`absolute bottom-1 left-4 right-4 h-px bg-[#D4A23A] transition-transform duration-300 origin-left ${
+                  isActive(item.path) ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                }`} />
+              </Link>
             ))}
           </div>
 
@@ -112,19 +117,23 @@ export default function Navigation({ onAdminClick }: NavigationProps) {
       >
         <div className="flex flex-col items-center justify-center h-full gap-6">
           {navItems.map((item, index) => (
-            <button
-              key={item.id}
-              onClick={() => scrollToSection(item.id)}
-              className="font-mono text-xl tracking-[0.15em] text-[#F2F5FA] hover:text-[#D4A23A] transition-all duration-300 relative group"
-              style={{ 
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`font-mono text-xl tracking-[0.15em] transition-all duration-300 relative group ${
+                isActive(item.path) ? 'text-[#D4A23A]' : 'text-[#F2F5FA] hover:text-[#D4A23A]'
+              }`}
+              style={{
                 transitionDelay: isMobileMenuOpen ? `${index * 50}ms` : '0ms',
                 opacity: isMobileMenuOpen ? 1 : 0,
                 transform: isMobileMenuOpen ? 'translateY(0)' : 'translateY(20px)'
               }}
             >
               {item.label}
-              <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#D4A23A] group-hover:w-full transition-all duration-300" />
-            </button>
+              <span className={`absolute -bottom-1 left-0 h-px bg-[#D4A23A] transition-all duration-300 ${
+                isActive(item.path) ? 'w-full' : 'w-0 group-hover:w-full'
+              }`} />
+            </Link>
           ))}
           <button
             onClick={() => {
@@ -132,7 +141,7 @@ export default function Navigation({ onAdminClick }: NavigationProps) {
               onAdminClick()
             }}
             className="flex items-center gap-3 px-6 py-3 border border-[#D4A23A] text-[#D4A23A] mt-6 rounded-full hover:bg-[#D4A23A]/10 transition-all duration-300"
-            style={{ 
+            style={{
               transitionDelay: isMobileMenuOpen ? '250ms' : '0ms',
               opacity: isMobileMenuOpen ? 1 : 0,
               transform: isMobileMenuOpen ? 'translateY(0)' : 'translateY(20px)'
