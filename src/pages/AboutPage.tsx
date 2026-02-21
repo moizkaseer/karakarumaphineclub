@@ -156,7 +156,7 @@ export default function AboutPage() {
               </div>
               <div className="flex gap-4">
                 <div className="w-12 h-12 bg-[#D4A23A]/10 border border-[#D4A23A]/20 flex items-center justify-center shrink-0">
-                  <span className="font-display font-black text-[#D4A23A] text-lg">20 +</span>
+                  <span className="font-display font-black text-[#D4A23A] text-lg">50+</span>
                 </div>
                 <div>
                   <h4 className="font-display font-semibold text-[#F2F5FA]">Active Members</h4>
