@@ -100,6 +100,11 @@ export interface Database {
           motivation: string
           status: 'pending' | 'reviewing' | 'approved' | 'rejected'
           notes: string | null
+          payment_method: 'jazzcash' | 'easypaisa' | 'nayapay' | null
+          payment_phone: string | null
+          payment_status: 'pending' | 'confirmed' | 'failed'
+          payment_reference: string | null
+          membership_fee: number
           created_at: string
         }
         Insert: {
@@ -113,6 +118,11 @@ export interface Database {
           motivation: string
           status?: 'pending' | 'reviewing' | 'approved' | 'rejected'
           notes?: string | null
+          payment_method?: 'jazzcash' | 'easypaisa' | 'nayapay' | null
+          payment_phone?: string | null
+          payment_status?: 'pending' | 'confirmed' | 'failed'
+          payment_reference?: string | null
+          membership_fee?: number
           created_at?: string
         }
         Update: {
@@ -126,6 +136,11 @@ export interface Database {
           motivation?: string
           status?: 'pending' | 'reviewing' | 'approved' | 'rejected'
           notes?: string | null
+          payment_method?: 'jazzcash' | 'easypaisa' | 'nayapay' | null
+          payment_phone?: string | null
+          payment_status?: 'pending' | 'confirmed' | 'failed'
+          payment_reference?: string | null
+          membership_fee?: number
           created_at?: string
         }
         Relationships: []

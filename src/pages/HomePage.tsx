@@ -8,11 +8,7 @@ import EventDetail from '@/sections/EventDetail'
 import StoryDetail from '@/sections/StoryDetail'
 import type { EventRow, StoryRow } from '@/lib/database'
 
-interface HomePageProps {
-  onJoinClick: () => void
-}
-
-export default function HomePage({ onJoinClick }: HomePageProps) {
+export default function HomePage() {
   const [selectedEvent, setSelectedEvent] = useState<EventRow | null>(null)
   const [selectedStory, setSelectedStory] = useState<StoryRow | null>(null)
   const snapInitialized = useRef(false)
@@ -98,7 +94,7 @@ export default function HomePage({ onJoinClick }: HomePageProps) {
         />
       )}
 
-      <HeroSection className="z-section-1" onJoinClick={onJoinClick} />
+      <HeroSection className="z-section-1" />
       <EventsSection className="z-section-2" id="events" onEventClick={setSelectedEvent} />
       <StoriesSection className="z-section-3" id="stories" onStoryClick={setSelectedStory} />
       <TeamSection className="z-section-4" id="team" />

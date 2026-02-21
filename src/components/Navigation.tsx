@@ -31,6 +31,7 @@ export default function Navigation({ onAdminClick }: NavigationProps) {
     { label: 'Stories', path: '/stories' },
     { label: 'Team', path: '/team' },
     { label: 'Contact', path: '/contact' },
+    { label: 'Join', path: '/join' },
   ]
 
   const isActive = (path: string) => location.pathname === path

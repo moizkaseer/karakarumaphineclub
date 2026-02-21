@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Mail, MapPin, TrendingUp, Eye, Trash2, CheckCircle, XCircle, Clock } from 'lucide-react'
+import { Mail, MapPin, TrendingUp, Eye, Trash2, CheckCircle, XCircle, Clock, Smartphone, CreditCard } from 'lucide-react'
 import {
   getMembershipApplications,
   updateMembershipApplication,
@@ -80,6 +80,30 @@ export default function MembershipsTab() {
     return level.charAt(0).toUpperCase() + level.slice(1)
   }
 
+  const getPaymentStatusColor = (status: string) => {
+    switch (status) {
+      case 'confirmed':
+        return 'text-green-400 bg-green-400/10'
+      case 'failed':
+        return 'text-red-400 bg-red-400/10'
+      default:
+        return 'text-yellow-400 bg-yellow-400/10'
+    }
+  }
+
+  const getPaymentMethodLabel = (method: string | null) => {
+    switch (method) {
+      case 'jazzcash':
+        return 'JazzCash'
+      case 'easypaisa':
+        return 'EasyPaisa'
+      case 'nayapay':
+        return 'NayaPay'
+      default:
+        return 'None'
+    }
+  }
+
   const pendingCount = applications.filter((a) => a.status === 'pending').length
 
   if (loading) {
@@ -143,6 +167,17 @@ export default function MembershipsTab() {
                     <TrendingUp className="w-3 h-3" />
                     {getExperienceLabel(application.experience_level)}
                   </span>
+                  {application.payment_method && (
+                    <span className="flex items-center gap-1">
+                      <CreditCard className="w-3 h-3" />
+                      {getPaymentMethodLabel(application.payment_method)}
+                    </span>
+                  )}
+                  {application.payment_status && (
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono ${getPaymentStatusColor(application.payment_status)}`}>
+                      {application.payment_status.toUpperCase()}
+                    </span>
+                  )}
                   <span>
                     {new Date(application.created_at).toLocaleDateString()}
                   </span>
@@ -245,6 +280,75 @@ export default function MembershipsTab() {
                     </p>
                   </div>
                 </div>
+
+                {/* Payment Information */}
+                {selectedApplication.payment_method && (
+                  <div className="bg-[#151C2A] border border-[#1E293B] rounded-lg p-4 mb-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Smartphone className="w-4 h-4 text-[#D4A23A]" />
+                      <label className="text-xs font-mono text-[#D4A23A] tracking-wider">
+                        PAYMENT DETAILS
+                      </label>
+                    </div>
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-xs font-mono text-[#A7B1C4] mb-1">
+                          Payment Method
+                        </label>
+                        <p className="text-sm text-[#F2F5FA] font-medium">
+                          {getPaymentMethodLabel(selectedApplication.payment_method)}
+                        </p>
+                      </div>
+                      {selectedApplication.payment_phone && (
+                        <div>
+                          <label className="block text-xs font-mono text-[#A7B1C4] mb-1">
+                            Payment Phone
+                          </label>
+                          <p className="text-sm text-[#F2F5FA]">
+                            {selectedApplication.payment_phone}
+                          </p>
+                        </div>
+                      )}
+                      {selectedApplication.payment_reference && (
+                        <div>
+                          <label className="block text-xs font-mono text-[#A7B1C4] mb-1">
+                            Transaction Reference
+                          </label>
+                          <p className="text-sm text-[#F2F5FA] font-mono">
+                            {selectedApplication.payment_reference}
+                          </p>
+                        </div>
+                      )}
+                      <div>
+                        <label className="block text-xs font-mono text-[#A7B1C4] mb-1">
+                          Membership Fee
+                        </label>
+                        <p className="text-sm text-[#D4A23A] font-bold">
+                          PKR {selectedApplication.membership_fee?.toLocaleString() || '—'}
+                        </p>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-mono text-[#A7B1C4] mb-2">
+                          Payment Status
+                        </label>
+                        <select
+                          value={selectedApplication.payment_status || 'pending'}
+                          onChange={(e) => {
+                            const newStatus = e.target.value as 'pending' | 'confirmed' | 'failed'
+                            updateMembershipApplication(selectedApplication.id, { payment_status: newStatus })
+                            setSelectedApplication({ ...selectedApplication, payment_status: newStatus })
+                            loadApplications()
+                          }}
+                          className="w-full px-3 py-2 bg-[#0B0F17] border border-[#1E293B] rounded-lg text-[#F2F5FA] text-sm"
+                        >
+                          <option value="pending">Pending</option>
+                          <option value="confirmed">Confirmed</option>
+                          <option value="failed">Failed</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Admin Notes */}
                 <div>

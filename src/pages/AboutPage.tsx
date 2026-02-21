@@ -156,7 +156,7 @@ export default function AboutPage() {
               </div>
               <div className="flex gap-4">
                 <div className="w-12 h-12 bg-[#D4A23A]/10 border border-[#D4A23A]/20 flex items-center justify-center shrink-0">
-                  <span className="font-display font-black text-[#D4A23A] text-lg">20+</span>
+                  <span className="font-display font-black text-[#D4A23A] text-lg">20 +</span>
                 </div>
                 <div>
                   <h4 className="font-display font-semibold text-[#F2F5FA]">Active Members</h4>
@@ -224,8 +224,8 @@ export default function AboutPage() {
               <span>Meet the Team</span>
               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
-            <Link to="/contact" className="btn-primary flex items-center gap-2 group justify-center">
-              <span>Get in Touch</span>
+            <Link to="/join" className="btn-primary flex items-center gap-2 group justify-center">
+              <span>Join the Club</span>
               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </div>

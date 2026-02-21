@@ -4,10 +4,9 @@ import { ArrowRight, ChevronDown, Calendar, BookOpen, Users } from 'lucide-react
 
 interface HeroSectionProps {
   className?: string
-  onJoinClick?: () => void
 }
 
-export default function HeroSection({ className = '', onJoinClick }: HeroSectionProps) {
+export default function HeroSection({ className = '' }: HeroSectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLDivElement>(null)
   const subtitleRef = useRef<HTMLHeadingElement>(null)
@@ -220,13 +219,13 @@ export default function HeroSection({ className = '', onJoinClick }: HeroSection
 
         {/* CTA Buttons */}
         <div ref={ctaRef} className="flex flex-col sm:flex-row gap-4 mt-8">
-          <button
-            onClick={onJoinClick}
+          <Link
+            to="/join"
             className="btn-primary flex items-center gap-2 group"
           >
             <span>Join the Club</span>
             <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-          </button>
+          </Link>
           <Link
             to="/contact"
             className="btn-secondary flex items-center gap-2 group"

@@ -3,7 +3,6 @@ import { Routes, Route } from 'react-router-dom'
 import './App.css'
 import Navigation from './components/Navigation'
 import AdminPanel from './sections/AdminPanel'
-import MembershipForm from './components/MembershipForm'
 import { supabase } from './lib/supabase'
 import { signOut } from './lib/database'
 
@@ -14,6 +13,7 @@ const StoriesPage = lazy(() => import('./pages/StoriesPage'))
 const TeamPage = lazy(() => import('./pages/TeamPage'))
 const ContactPage = lazy(() => import('./pages/ContactPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
+const JoinPage = lazy(() => import('./pages/JoinPage'))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 
 function PageLoader() {
@@ -30,7 +30,6 @@ function PageLoader() {
 function App() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [showAdmin, setShowAdmin] = useState(false)
-  const [showMembershipForm, setShowMembershipForm] = useState(false)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -72,18 +71,16 @@ function App() {
       {/* Navigation */}
       <Navigation onAdminClick={handleAdminAccess} />
 
-      {/* Membership Form Modal */}
-      <MembershipForm isOpen={showMembershipForm} onClose={() => setShowMembershipForm(false)} />
-
       {/* Routes — Suspense shows a spinner while a page chunk loads */}
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          <Route path="/" element={<HomePage onJoinClick={() => setShowMembershipForm(true)} />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/stories" element={<StoriesPage />} />
           <Route path="/team" element={<TeamPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/join" element={<JoinPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
