@@ -19,10 +19,7 @@ export default function Navigation({ onAdminClick }: NavigationProps) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Close mobile menu on route change
-  useEffect(() => {
-    setIsMobileMenuOpen(false)
-  }, [location.pathname])
+  const closeMobileMenu = () => setIsMobileMenuOpen(false)
 
   const navItems = [
     { label: 'Home', path: '/' },
@@ -121,6 +118,7 @@ export default function Navigation({ onAdminClick }: NavigationProps) {
             <Link
               key={item.path}
               to={item.path}
+              onClick={closeMobileMenu}
               className={`font-mono text-xl tracking-[0.15em] transition-all duration-300 relative group ${
                 isActive(item.path) ? 'text-[#D4A23A]' : 'text-[#F2F5FA] hover:text-[#D4A23A]'
               }`}

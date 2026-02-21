@@ -26,7 +26,6 @@ export default function HomePage() {
       const ScrollTrigger = window.ScrollTrigger
 
       setTimeout(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const allTriggers = ScrollTrigger.getAll()
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const pinned = allTriggers.filter((st: any) => st.vars.pin)
