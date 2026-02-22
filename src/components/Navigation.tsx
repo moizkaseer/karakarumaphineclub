@@ -30,6 +30,7 @@ export default function Navigation({ onAdminClick }: NavigationProps) {
     { label: 'Contact', path: '/contact' },
     { label: 'Join', path: '/join' },
     {label : 'Donate', path: '/Gofund' },
+    {label : 'Instagram', path: 'https://www.instagram.com/karakoram_alpine_club/' },
   ]
 
   const isActive = (path: string) => location.pathname === path
