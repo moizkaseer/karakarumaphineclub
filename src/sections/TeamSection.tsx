@@ -14,6 +14,7 @@ const teamMembers = [
     bio: 'With over 20 years of high-altitude experience across the Karakoram, Sohail founded the club to share the mountains with the next generation.',
     summits: ['Khimor Wall', 'Khimor-e-bal', 'Hidden Valley', 'Gasherbrum', 'Batura', 'Passu Cones', 'Batakoshi Peak'],
     image: null,
+    instagram: 'https://www.instagram.com/sohailsakhii/',
   },
   // {
   //   name: 'Adnan Khan',
@@ -159,6 +160,25 @@ export default function TeamSection({ className = '', id }: TeamSectionProps) {
                 <MapPin className="w-3 h-3 text-[#A7B1C4]" />
                 <span className="text-xs text-[#A7B1C4]">{member.location}</span>
               </div>
+
+              {/* Instagram */}
+              {member.instagram && (
+                <div className="flex justify-center mt-3">
+                  <a
+                    href={member.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 text-[#A7B1C4] hover:text-[#D4A23A] transition-colors duration-300"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                      <circle cx="12" cy="12" r="5" />
+                      <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+                    </svg>
+                    <span className="text-xs font-mono">Instagram</span>
+                  </a>
+                </div>
+              )}
 
               {/* Bio */}
               <p className="body-text text-sm mt-4 text-center line-clamp-4">

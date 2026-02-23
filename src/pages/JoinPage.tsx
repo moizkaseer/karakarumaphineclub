@@ -14,7 +14,7 @@ import {
 } from 'lucide-react'
 import { submitMembershipApplication, type MembershipInsert } from '@/lib/database'
 
-const MEMBERSHIP_FEE = 5000
+const MEMBERSHIP_FEE = 10000
 
 const PAYMENT_PROVIDERS = [
   {

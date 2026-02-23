@@ -145,7 +145,7 @@ export default function ContactSection({ className = '', id }: ContactSectionPro
               </div>
               <div className="flex items-center gap-4">
                 <Phone className="w-5 h-5 text-[#D4A23A]" />
-                <span className="text-[#F2F5FA]">+92 123 456 7890</span>
+                <span className="text-[#F2F5FA]">+92 460789785</span>
               </div>
               <div className="flex items-start gap-4">
                 <MapPin className="w-5 h-5 text-[#D4A23A] mt-1" />
