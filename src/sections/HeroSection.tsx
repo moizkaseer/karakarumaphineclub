@@ -183,7 +183,7 @@ export default function HeroSection({ className = '' }: HeroSectionProps) {
         <div ref={titleRef} className="text-center">
           <h1
             className="hero-main-title headline-display text-center"
-            style={{ fontSize: 'clamp(52px, 11vw, 140px)', lineHeight: 0.9 }}
+            style={{ fontSize: 'clamp(44px, 11vw, 140px)', lineHeight: 0.9 }}
           >
             KARAKORAM
           </h1>
